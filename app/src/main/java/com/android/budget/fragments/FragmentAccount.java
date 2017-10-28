@@ -8,9 +8,14 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,7 +24,7 @@ import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.android.budget.activities.AccountSettingsActivity;
 import com.android.budget.activities.MainActivity;
-import com.android.budget.adapter.MyArrayAdapter;
+import com.android.budget.adapter.AccountArrayAdapter;
 import com.android.budget.adapter.model.AccountListModel;
 import com.android.budget.dao.impl.AccountDAOImpl;
 import com.android.budget.dao.impl.CurrencyDAOImpl;
@@ -79,7 +84,7 @@ public class FragmentAccount extends Fragment {
         lvAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MyArrayAdapter adapter = (MyArrayAdapter) parent.getAdapter();
+                AccountArrayAdapter adapter = (AccountArrayAdapter) parent.getAdapter();
                 AccountListModel model = (AccountListModel) adapter.getItem(position);
                 selectedAccountId = model.getId();
                 SharedPreferences.Editor editor = MainActivity.preferences.edit();
@@ -89,46 +94,6 @@ public class FragmentAccount extends Fragment {
                         model.getCurrency() + ")");
             }
         });
-        registerForContextMenu(lvAccount);
-        /*lvAccount.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
-                final PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
-                popupMenu.setGravity(Gravity.END);
-                popupMenu.getMenuInflater().inflate(R.menu.account_popup_menu, popupMenu.getMenu());
-
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-
-                        MyArrayAdapter adapter = (MyArrayAdapter) parent.getAdapter();
-                        AccountListModel model = (AccountListModel) adapter.getItem(position);
-
-                        switch (item.getItemId()) {
-                            case R.id.btnChange:
-                                selectedAccountId = model.getId();
-                                openAccountSettingsWindow(selectedAccountId);
-                                break;
-                            case R.id.btnRemove:
-                                Log.d("myDB", "SelectedId: " + selectedAccountId + "ModelId: " + model.getId());
-                                if (selectedAccountId.equals(model.getId())){
-                                    MainActivity.preferences.edit().remove("selectedAccount").apply();
-                                    tvAccountSelected.setText("Account Not Selected");
-                                }
-                                accountDAO.removeById(model.getId());
-                                loadAccountsInList();
-                                break;
-                        }
-
-                        return true;
-                    }
-                });
-
-                popupMenu.show();
-
-                return true;
-            }
-        });*/
 
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.show();
@@ -166,6 +131,79 @@ public class FragmentAccount extends Fragment {
             listModels.add(new AccountListModel(db, account));
         }
 
-        lvAccount.setAdapter(new MyArrayAdapter(getActivity(), listModels.toArray(new AccountListModel[listModels.size()])));
+        final AccountArrayAdapter accountArrayAdapter = new AccountArrayAdapter(getActivity(), R.layout.row_layout_account, listModels);
+
+        lvAccount.setAdapter(accountArrayAdapter);
+        lvAccount.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+        lvAccount.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
+            @Override
+            public void onItemCheckedStateChanged(ActionMode mode,
+                                                  int position, long id, boolean checked) {
+                final int checkedCount = lvAccount.getCheckedItemCount();
+                mode.setTitle(checkedCount + " Selected");
+                accountArrayAdapter.toogleSelection(position);
+                mode.invalidate();
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+                AccountListModel selectedItem;
+                SparseBooleanArray selected;
+
+                switch (item.getItemId()) {
+                    case R.id.btnChange:
+                        selected = accountArrayAdapter.getSelectedIds();
+                        selectedItem = accountArrayAdapter.getItem(selected.keyAt(0));
+
+                        selectedAccountId = selectedItem.getId();
+                        mode.finish();
+                        openAccountSettingsWindow(selectedAccountId);
+                        return true;
+                    case R.id.btnRemove:
+                        selected = accountArrayAdapter.getSelectedIds();
+                        for (int i = (selected.size() - 1); i >= 0; i--) {
+                            if (selected.valueAt(i)) {
+                                selectedItem = accountArrayAdapter.getItem(selected.keyAt(i));
+                                if (selectedAccountId.equals(selectedItem.getId())) {
+                                    MainActivity.preferences.edit().remove("selectedAccount").apply();
+                                    tvAccountSelected.setText("Account Not Selected");
+                                }
+                                accountArrayAdapter.remove(selectedItem);
+                                accountDAO.removeById(selectedItem.getId());
+                            }
+                        }
+                        mode.finish();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mode.getMenuInflater().inflate(R.menu.account_menu, menu);
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                accountArrayAdapter.removeSelection();
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                MenuItem itemEdit = menu.findItem(R.id.btnChange);
+
+                if (accountArrayAdapter.getSelectedCount() == 1) {
+                    itemEdit.setVisible(true);
+                    return true;
+                } else {
+                    itemEdit.setVisible(false);
+                    return true;
+                }
+            }
+
+        });
     }
 }
