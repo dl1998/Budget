@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<currencies>
+    <record name="Afghan afghani" iso="AFN" />
+    <record name="Albanian lek" iso="ALL" />
+    <record name="Algerian dinar" iso="DZD" />
+    <record name="Angolan kwanza" iso="AOA" />
+    <record name="Argentine peso" iso="ARS" />
+    <record name="Armenian dram" iso="AMD" />
+    <record name="Aruban florin" iso="AWG" />
+    <record name="Ascension pound" iso="none" />
+    <record name="Australian dollar" iso="AUD" />
+    <record name="Azerbaijani manat" iso="AZN" />
+    <record name="Bahamian dollar" iso="BSD" />
+    <record name="Bahraini dinar" iso="BHD" />
+    <record name="Bangladeshi taka" iso="BDT" />
+    <record name="Barbadian dollar" iso="BBD" />
+    <record name="Belarusian ruble" iso="BYR" />
+    <record name="Belize dollar" iso="BZD" />
+    <record name="Bermudian dollar" iso="BMD" />
+    <record name="Bhutanese ngultrum" iso="BTN" />
+    <record name="Bolivian boliviano" iso="BOB" />
+    <record name="Bosnia and Herzegovina convertible mark" iso="BAM" />
+    <record name="Botswana pula" iso="BWP" />
+    <record name="Brazilian real" iso="BRL" />
+    <record name="British pound" iso="GBP" />
+    <record name="Brunei dollar" iso="BND" />
+    <record name="Bulgarian lev" iso="BGN" />
+    <record name="Burmese kyat" iso="MMK" />
+    <record name="Burundian franc" iso="BIF" />
+    <record name="CFP franc" iso="XPF" />
+    <record name="Cambodian riel" iso="KHR" />
+    <record name="Canadian dollar" iso="CAD" />
+    <record name="Cape Verdean escudo" iso="CVE" />
+    <record name="Cayman Islands dollar" iso="KYD" />
+    <record name="Central African CFA franc" iso="XAF" />
+    <record name="Chilean peso" iso="CLP" />
+    <record name="Chinese yuan" iso="CNY" />
+    <record name="Colombian peso" iso="COP" />
+    <record name="Comorian franc" iso="KMF" />
+    <record name="Congolese franc" iso="CDF" />
+    <record name="Costa Rican colón" iso="CRC" />
+    <record name="Croatian kuna" iso="HRK" />
+    <record name="Cuban convertible peso" iso="CUC" />
+    <record name="Cuban peso" iso="CUP" />
+    <record name="Czech koruna" iso="CZK" />
+    <record name="Danish krone" iso="DKK" />
+    <record name="Djiboutian franc" iso="DJF" />
+    <record name="Dominican peso" iso="DOP" />
+    <record name="East Caribbean dollar" iso="XCD" />
+    <record name="Egyptian pound" iso="EGP" />
+    <record name="Eritrean nakfa" iso="ERN" />
+    <record name="Ethiopian birr" iso="ETB" />
+    <record name="Euro" iso="EUR" />
+    <record name="Falkland Islands pound" iso="FKP" />
+    <record name="Fijian dollar" iso="FJD" />
+    <record name="Gambian dalasi" iso="GMD" />
+    <record name="Georgian lari" iso="GEL" />
+    <record name="Ghana cedi" iso="GHS" />
+    <record name="Gibraltar pound" iso="GIP" />
+    <record name="Guatemalan quetzal" iso="GTQ" />
+    <record name="Guernsey pound" iso="GGP" />
+    <record name="Guinean franc" iso="GNF" />
+    <record name="Guyanese dollar" iso="GYD" />
+    <record name="Haitian gourde" iso="HTG" />
+    <record name="Honduran lempira" iso="HNL" />
+    <record name="Hong Kong dollar" iso="HKD" />
+    <record name="Hungarian forint" iso="HUF" />
+    <record name="Icelandic króna" iso="ISK" />
+    <record name="Indian rupee" iso="INR" />
+    <record name="Indonesian rupiah" iso="IDR" />
+    <record name="Iranian rial" iso="IRR" />
+    <record name="Iraqi dinar" iso="IQD" />
+    <record name="Israeli new shekel" iso="ILS" />
+    <record name="Jamaican dollar" iso="JMD" />
+    <record name="Japanese yen" iso="JPY" />
+    <record name="Jordanian dinar" iso="JOD" />
+    <record name="Kazakhstani tenge" iso="KZT" />
+    <record name="Kenyan shilling" iso="KES" />
+    <record name="Kuwaiti dinar" iso="KWD" />
+    <record name="Kyrgyzstani som" iso="KGS" />
+    <record name="Lao kip" iso="LAK" />
+    <record name="Lebanese pound" iso="LBP" />
+    <record name="Lesotho loti" iso="LSL" />
+    <record name="Liberian dollar" iso="LRD" />
+    <record name="Libyan dinar" iso="LYD" />
+    <record name="Macanese pataca" iso="MOP" />
+    <record name="Macedonian denar" iso="MKD" />
+    <record name="Malagasy ariary" iso="MGA" />
+    <record name="Malawian kwacha" iso="MWK" />
+    <record name="Malaysian ringgit" iso="MYR" />
+    <record name="Maldivian rufiyaa" iso="MVR" />
+    <record name="Mauritanian ouguiya" iso="MRO" />
+    <record name="Mauritian rupee" iso="MUR" />
+    <record name="Mexican peso" iso="MXN" />
+    <record name="Moldovan leu" iso="MDL" />
+    <record name="Mongolian tögrög" iso="MNT" />
+    <record name="Moroccan dirham" iso="MAD" />
+    <record name="Mozambican metical" iso="MZN" />
+    <record name="Namibian dollar" iso="NAD" />
+    <record name="Nepalese rupee" iso="NPR" />
+    <record name="Netherlands Antillean guilder" iso="ANG" />
+    <record name="New Taiwan dollar" iso="TWD" />
+    <record name="New Zealand dollar" iso="NZD" />
+    <record name="Nicaraguan córdoba" iso="NIO" />
+    <record name="Nigerian naira" iso="NGN" />
+    <record name="North Korean won" iso="KPW" />
+    <record name="Norwegian krone" iso="NOK" />
+    <record name="Omani rial" iso="OMR" />
+    <record name="Pakistani rupee" iso="PKR" />
+    <record name="Panamanian balboa" iso="PAB" />
+    <record name="Papua New Guinean kina" iso="PGK" />
+    <record name="Paraguayan guaraní" iso="PYG" />
+    <record name="Peruvian nuevo sol" iso="PEN" />
+    <record name="Philippine peso" iso="PHP" />
+    <record name="Polish złoty" iso="PLN" />
+    <record name="Qatari riyal" iso="QAR" />
+    <record name="Romanian leu" iso="RON" />
+    <record name="Russian ruble" iso="RUB" />
+    <record name="Rwandan franc" iso="RWF" />
+    <record name="Saint Helena pound" iso="SHP" />
+    <record name="Samoan tālā" iso="WST" />
+    <record name="Saudi riyal" iso="SAR" />
+    <record name="Serbian dinar" iso="RSD" />
+    <record name="Seychellois rupee" iso="SCR" />
+    <record name="Sierra Leonean leone" iso="SLL" />
+    <record name="Singapore dollar" iso="SGD" />
+    <record name="Solomon Islands dollar" iso="SBD" />
+    <record name="Somali shilling" iso="SOS" />
+    <record name="South African rand" iso="ZAR" />
+    <record name="South Korean won" iso="KRW" />
+    <record name="South Sudanese pound" iso="SSP" />
+    <record name="Sri Lankan rupee" iso="LKR" />
+    <record name="Sudanese pound" iso="SDG" />
+    <record name="Surinamese dollar" iso="SRD" />
+    <record name="Swazi lilangeni" iso="SZL" />
+    <record name="Swedish krona" iso="SEK" />
+    <record name="Swiss franc" iso="CHF" />
+    <record name="Syrian pound" iso="SYP" />
+    <record name="São Tomé and Príncipe dobra" iso="STD" />
+    <record name="Tajikistani somoni" iso="TJS" />
+    <record name="Tanzanian shilling" iso="TZS" />
+    <record name="Thai baht" iso="THB" />
+    <record name="Tongan paʻanga" iso="TOP" />
+    <record name="Trinidad and Tobago dollar" iso="TTD" />
+    <record name="Tunisian dinar" iso="TND" />
+    <record name="Turkish lira" iso="TRY" />
+    <record name="Turkmenistan manat" iso="TMT" />
+    <record name="Tuvaluan dollar" iso="" />
+    <record name="Ugandan shilling" iso="UGX" />
+    <record name="Ukrainian hryvnia" iso="UAH" />
+    <record name="United Arab Emirates dirham" iso="AED" />
+    <record name="United States dollar" iso="USD" />
+    <record name="Uruguayan peso" iso="UYU" />
+    <record name="Uzbekistani som" iso="UZS" />
+    <record name="Vanuatu vatu" iso="VUV" />
+    <record name="Venezuelan bolívar" iso="VEF" />
+    <record name="Vietnamese đồng" iso="VND" />
+    <record name="West African CFA franc" iso="XOF" />
+    <record name="Yemeni rial" iso="YER" />
+    <record name="Zambian kwacha" iso="ZMW" />
+</currencies>

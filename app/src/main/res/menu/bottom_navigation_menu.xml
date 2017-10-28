@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/account"
+        android:title="@string/account"
+        android:icon="@drawable/account"
+        android:enabled="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/balance"
+        android:title="@string/balance"
+        android:icon="@drawable/currency_usd"
+        android:enabled="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/statistic"
+        android:title="@string/statistic"
+        android:icon="@drawable/chart_bar"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/other"
+        android:title="@string/other"
+        android:icon="@drawable/view_headline"
+        android:enabled="true"
+        app:showAsAction="ifRoom"/>
+</menu>
