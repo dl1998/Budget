@@ -6,12 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialogFragment;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,12 +19,12 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 
 import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.android.budget.activities.CategorySettingsActivity;
 import com.android.budget.activities.IncomeExpensesActivity;
+import com.android.budget.activities.MainActivity;
 import com.android.budget.adapter.CategoriesAdapter;
 import com.android.budget.dao.impl.CategoryDAOImpl;
 import com.android.budget.entity.Category;
@@ -52,6 +51,14 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.balance_fragment, container, false);
+
+        if(MainActivity.preferences.getInt("selectedAccount", -1) == -1){
+            View contentView = view.findViewById(R.id.balance_Fragment_Content_View);
+            contentView.setEnabled(false);
+            contentView.setVisibility(View.INVISIBLE);
+            CoordinatorLayout rootView = view.findViewById(R.id.balance_Root_View);
+            inflater.inflate(R.layout.not_selected_account_fragment, rootView);
+        }
 
         dbHelper = new DBHelper(getActivity());
         db = dbHelper.getWritableDatabase();

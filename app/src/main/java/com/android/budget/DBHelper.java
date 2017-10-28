@@ -50,14 +50,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("create table category ( " +
                 "id_category integer primary key autoincrement, " +
                 "name_category text, " +
-                "src_image integer " +
+                "src_image integer, " +
+                "id_account integer " +
                 ");");
 
-        db.execSQL("create table outgoing ( " +
-                "id_outgoing integer primary key autoincrement, " +
-                "date_outgoing integer, " +
-                "cost_outgoing integer, " +
-                "id_account integer, " +
+        db.execSQL("create table expenses ( " +
+                "id_expenses integer primary key autoincrement, " +
+                "date_expenses integer, " +
+                "cost_expenses integer, " +
                 "id_category integer " +
                 ");");
 

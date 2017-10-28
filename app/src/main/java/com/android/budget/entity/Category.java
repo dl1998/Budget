@@ -9,14 +9,16 @@ public class Category {
     private Integer id_category;
     private String name_category;
     private Integer src_image;
+    private Integer id_account;
 
     public Category() {
     }
 
-    public Category(Integer id_category, String name_category, Integer src_image) {
+    public Category(Integer id_category, String name_category, Integer src_image, Integer id_account) {
         this.id_category = id_category;
         this.name_category = name_category;
         this.src_image = src_image;
+        this.id_account = id_account;
     }
 
     public Integer getId_category() {
@@ -41,5 +43,13 @@ public class Category {
 
     public void setSrc_image(Integer src_image){
         this.src_image = src_image;
+    }
+
+    public Integer getId_account() {
+        return id_account;
+    }
+
+    public void setId_account(Integer id_account) {
+        this.id_account = id_account;
     }
 }

@@ -45,6 +45,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                 category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
                 category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
                 category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
+                category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
 
                 db.setTransactionSuccessful();
             }
@@ -82,6 +83,7 @@ public class CategoryDAOImpl implements CategoryDAO {
                         category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
                         category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
                         category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
+                        category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
 
                         list.add(category);
                     } while (cursor.moveToNext());
@@ -116,6 +118,7 @@ public class CategoryDAOImpl implements CategoryDAO {
             statement.clearBindings();
             statement.bindString(1, category.getName_category());
             statement.bindLong(2, category.getSrc_image());
+            statement.bindLong(3, category.getId_account());
             statement.execute();
             db.setTransactionSuccessful();
 
@@ -174,7 +177,8 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         String sql = "UPDATE category SET name_category = \"" +
                 category.getName_category() + "\", " +
-                "src_image = \"" + category.getSrc_image() + "\" " +
+                "src_image = " + category.getSrc_image() + ", " +
+                "id_account = " + category.getId_account() + " " +
                 "WHERE id_category = " + id + ";";
         SQLiteStatement statement = db.compileStatement(sql);
         db.beginTransaction();
