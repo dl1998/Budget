@@ -7,12 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -79,6 +75,7 @@ public class FragmentAccount extends Fragment {
         }
 
         lvAccount = (ListView) view.findViewById(R.id.lvAccount);
+        lvAccount.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         lvAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -93,7 +90,7 @@ public class FragmentAccount extends Fragment {
             }
         });
         registerForContextMenu(lvAccount);
-        lvAccount.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        /*lvAccount.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(final AdapterView<?> parent, final View view, final int position, final long id) {
                 final PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
@@ -131,7 +128,7 @@ public class FragmentAccount extends Fragment {
 
                 return true;
             }
-        });
+        });*/
 
         fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         fab.show();

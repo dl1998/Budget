@@ -110,7 +110,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         Log.d("myDB", "Category add start");
 
-        String sql = "INSERT INTO category (name_category, src_image) VALUES(?, ?);";
+        String sql = "INSERT INTO category (name_category, src_image, id_account) VALUES(?, ?, ?);";
         SQLiteStatement statement = db.compileStatement(sql);
         db.beginTransaction();
         try {

@@ -87,6 +87,8 @@ public class CategorySettingsActivity extends AppCompatActivity {
                 if (!etCategoryName.getText().toString().isEmpty()) {
 
                     if(category.getId_category() == null){
+                        Integer selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
+                        if(selectedAccountId != -1) category.setId_account(selectedAccountId);
                         category.setName_category(etCategoryName.getText().toString());
                         categoryDAO.add(category);
                     } else {
