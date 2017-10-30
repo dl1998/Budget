@@ -12,6 +12,8 @@ public interface CategoryDAO {
 
     Category findCategoryById(Integer id);
     List<Category> getAll();
+
+    List<Category> getAllByAccount(Integer accountId);
     void add(Category category);
     void removeAll();
     void removeById(Integer id);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/account_settings_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/account_settings_coordinator_layout"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activities.AccountSettingsActivity">
 
@@ -27,48 +27,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:title="@string/account_settings"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/account_settings" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <LinearLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:padding="45dp"
-        android:orientation="vertical">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <EditText
             android:id="@+id/etAccountName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
+            android:hint="@string/account_name"
             android:imeActionLabel="Done"
-            android:maxLines="1"
-            android:maxLength="20"
+            android:imeOptions="actionDone"
             android:inputType="text"
-            android:hint="@string/account_name" />
+            android:maxLength="20"
+            android:maxLines="1" />
         <LinearLayout
-            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/txtChooseCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:onClick="openCurrenciesChooser"
                 android:text="@string/choose_currency"
-                android:textStyle="bold"
                 android:textSize="18sp"
-                android:onClick="openCurrenciesChooser"/>
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/tvSelectedCurrency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:onClick="openCurrenciesChooser"/>
+                android:onClick="openCurrenciesChooser"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>

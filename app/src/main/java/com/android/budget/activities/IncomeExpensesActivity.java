@@ -38,15 +38,15 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income_expenses);
 
-        btnBackspace = (ImageButton) findViewById(R.id.btnBackspace);
-        tvSelectedDate = (TextView) findViewById(R.id.tvSelectedDate);
-        tvCost = (TextView) findViewById(R.id.tvCost);
+        btnBackspace = findViewById(R.id.btnBackspace);
+        tvSelectedDate = findViewById(R.id.tvSelectedDate);
+        tvCost = findViewById(R.id.tvCost);
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.income_expenses_fragment, new FragmentCalculation());
         fragmentTransaction.commit();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         toolbar.setTitle("New activity");
         setSupportActionBar(toolbar);
 
@@ -95,7 +95,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
     private void openAlertDialogDatePicker() {
         View alertLayout = getLayoutInflater().inflate(R.layout.date_choose_alert_dialog, null);
 
-        DatePicker datePicker = (DatePicker) alertLayout.findViewById(R.id.datePicker);
+        DatePicker datePicker = alertLayout.findViewById(R.id.datePicker);
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(alertLayout);

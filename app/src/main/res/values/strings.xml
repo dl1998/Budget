@@ -18,4 +18,5 @@
     <string name="account_incorrect_info">Incorrect data in account name or currency</string>
     <string name="date">Date</string>
     <string name="category_setting">Category Setting</string>
+    <string name="account_not_selected">Account Not Selected</string>
 </resources>

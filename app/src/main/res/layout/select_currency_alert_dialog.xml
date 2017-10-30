@@ -9,7 +9,7 @@
         android:id="@+id/listCurrencies"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:scrollbars="none"
-        android:divider="@android:color/transparent"/>
+        android:divider="@android:color/transparent"
+        android:scrollbars="none" />
 
 </LinearLayout>

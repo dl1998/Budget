@@ -24,11 +24,13 @@ import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.android.budget.activities.AccountSettingsActivity;
 import com.android.budget.activities.MainActivity;
-import com.android.budget.adapter.AccountArrayAdapter;
+import com.android.budget.adapter.AccountsAdapter;
 import com.android.budget.adapter.model.AccountListModel;
 import com.android.budget.dao.impl.AccountDAOImpl;
+import com.android.budget.dao.impl.CategoryDAOImpl;
 import com.android.budget.dao.impl.CurrencyDAOImpl;
 import com.android.budget.entity.Account;
+import com.android.budget.entity.Category;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ public class FragmentAccount extends Fragment {
     private SQLiteDatabase db;
     private AccountDAOImpl accountDAO;
     private CurrencyDAOImpl currencyDAO;
+    private CategoryDAOImpl categoryDAO;
     private Integer selectedAccountId;
 
     @Nullable
@@ -57,7 +60,7 @@ public class FragmentAccount extends Fragment {
 
         Toolbar toolbar;
         if (container != null) {
-            toolbar = (Toolbar) container.getRootView().findViewById(R.id.toolbar_main);
+            toolbar = container.getRootView().findViewById(R.id.toolbar_main);
             toolbar.setTitle(R.string.account);
         }
 
@@ -66,9 +69,10 @@ public class FragmentAccount extends Fragment {
 
         accountDAO = new AccountDAOImpl(db);
         currencyDAO = new CurrencyDAOImpl(db);
+        categoryDAO = new CategoryDAOImpl(db);
 
         selectedAccountId = null;
-        tvAccountSelected = (TextView) view.findViewById(R.id.tvSelectedAccount);
+        tvAccountSelected = view.findViewById(R.id.tvSelectedAccount);
 
         if (MainActivity.preferences != null) {
             selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
@@ -79,13 +83,13 @@ public class FragmentAccount extends Fragment {
             }
         }
 
-        lvAccount = (ListView) view.findViewById(R.id.lvAccount);
+        lvAccount = view.findViewById(R.id.lvAccount);
         lvAccount.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         lvAccount.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AccountArrayAdapter adapter = (AccountArrayAdapter) parent.getAdapter();
-                AccountListModel model = (AccountListModel) adapter.getItem(position);
+                AccountsAdapter adapter = (AccountsAdapter) parent.getAdapter();
+                AccountListModel model = adapter.getItem(position);
                 selectedAccountId = model.getId();
                 SharedPreferences.Editor editor = MainActivity.preferences.edit();
                 editor.putInt("selectedAccount", model.getId());
@@ -95,7 +99,7 @@ public class FragmentAccount extends Fragment {
             }
         });
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        fab = getActivity().findViewById(R.id.fab);
         fab.show();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,9 +135,9 @@ public class FragmentAccount extends Fragment {
             listModels.add(new AccountListModel(db, account));
         }
 
-        final AccountArrayAdapter accountArrayAdapter = new AccountArrayAdapter(getActivity(), R.layout.row_layout_account, listModels);
+        final AccountsAdapter accountsAdapter = new AccountsAdapter(getActivity(), R.layout.row_layout_account, listModels);
 
-        lvAccount.setAdapter(accountArrayAdapter);
+        lvAccount.setAdapter(accountsAdapter);
         lvAccount.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         lvAccount.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override
@@ -141,36 +145,36 @@ public class FragmentAccount extends Fragment {
                                                   int position, long id, boolean checked) {
                 final int checkedCount = lvAccount.getCheckedItemCount();
                 mode.setTitle(checkedCount + " Selected");
-                accountArrayAdapter.toogleSelection(position);
+                accountsAdapter.toogleSelection(position);
                 mode.invalidate();
             }
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
-                AccountListModel selectedItem;
+                AccountListModel selectedAccountListModel;
                 SparseBooleanArray selected;
 
                 switch (item.getItemId()) {
                     case R.id.btnChange:
-                        selected = accountArrayAdapter.getSelectedIds();
-                        selectedItem = accountArrayAdapter.getItem(selected.keyAt(0));
+                        selected = accountsAdapter.getSelectedIds();
+                        selectedAccountListModel = accountsAdapter.getItem(selected.keyAt(0));
 
-                        selectedAccountId = selectedItem.getId();
+                        selectedAccountId = selectedAccountListModel.getId();
                         mode.finish();
                         openAccountSettingsWindow(selectedAccountId);
                         return true;
                     case R.id.btnRemove:
-                        selected = accountArrayAdapter.getSelectedIds();
+                        selected = accountsAdapter.getSelectedIds();
                         for (int i = (selected.size() - 1); i >= 0; i--) {
                             if (selected.valueAt(i)) {
-                                selectedItem = accountArrayAdapter.getItem(selected.keyAt(i));
-                                if (selectedAccountId.equals(selectedItem.getId())) {
+                                selectedAccountListModel = accountsAdapter.getItem(selected.keyAt(i));
+                                if (selectedAccountId.equals(selectedAccountListModel.getId())) {
                                     MainActivity.preferences.edit().remove("selectedAccount").apply();
-                                    tvAccountSelected.setText("Account Not Selected");
+                                    tvAccountSelected.setText(R.string.account_not_selected);
                                 }
-                                accountArrayAdapter.remove(selectedItem);
-                                accountDAO.removeById(selectedItem.getId());
+                                accountsAdapter.remove(selectedAccountListModel);
+                                removeDataByAccountId(selectedAccountListModel.getId());
                             }
                         }
                         mode.finish();
@@ -188,14 +192,14 @@ public class FragmentAccount extends Fragment {
 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
-                accountArrayAdapter.removeSelection();
+                accountsAdapter.removeSelection();
             }
 
             @Override
             public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
                 MenuItem itemEdit = menu.findItem(R.id.btnChange);
 
-                if (accountArrayAdapter.getSelectedCount() == 1) {
+                if (accountsAdapter.getSelectedCount() == 1) {
                     itemEdit.setVisible(true);
                     return true;
                 } else {
@@ -205,5 +209,13 @@ public class FragmentAccount extends Fragment {
             }
 
         });
+    }
+
+    private void removeDataByAccountId(Integer id) {
+        ArrayList<Category> categories = new ArrayList<>(categoryDAO.getAllByAccount(id));
+        for (Category category : categories) {
+            categoryDAO.removeById(category.getId_category());
+        }
+        accountDAO.removeById(id);
     }
 }

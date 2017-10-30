@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer-array name="drawables">
+        <item>@drawable/air_plane</item>
+        <item>@drawable/baby</item>
+        <item>@drawable/ball</item>
+        <item>@drawable/brush</item>
+        <item>@drawable/bus</item>
+        <item>@drawable/car</item>
+        <item>@drawable/clothes</item>
+        <item>@drawable/cocktail</item>
+        <item>@drawable/coffee</item>
+        <item>@drawable/coin</item>
+        <item>@drawable/dinner</item>
+        <item>@drawable/disco</item>
+        <item>@drawable/fruit</item>
+        <item>@drawable/groceries</item>
+        <item>@drawable/home</item>
+        <item>@drawable/hospital</item>
+        <item>@drawable/movie</item>
+        <item>@drawable/music</item>
+        <item>@drawable/phone</item>
+        <item>@drawable/pills</item>
+        <item>@drawable/pint</item>
+        <item>@drawable/taxi</item>
+        <item>@drawable/tickets</item>
+        <item>@drawable/train</item>
+        <item>@drawable/vegetables</item>
+        <item>@drawable/video</item>
+    </integer-array>
+
+</resources>

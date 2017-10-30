@@ -29,12 +29,12 @@ public class MainActivity extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
+        Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
         preferences = getSharedPreferences("mySettings", Context.MODE_PRIVATE);
 
-        BottomNavigationView navigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setSelected(true);
         navigationView.setSelectedItemId(0);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new FragmentAccount()).commit();
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.hide();
     }
 }

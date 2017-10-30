@@ -38,14 +38,14 @@ public class FragmentStatistic extends Fragment {
 
         Toolbar toolbar;
         if (container != null) {
-            toolbar = (Toolbar) container.getRootView().findViewById(R.id.toolbar_main);
+            toolbar = container.getRootView().findViewById(R.id.toolbar_main);
             toolbar.setTitle(R.string.statistic);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.hide();
 
-        chart = (PieChart) view.findViewById(R.id.chart);
+        chart = view.findViewById(R.id.chart);
 
         chart.setHoleRadius(60f);
         chart.setRotationEnabled(false);

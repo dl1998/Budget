@@ -26,13 +26,18 @@
         </activity>
         <activity
             android:name=".activities.IncomeExpensesActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="locked">
+            android:screenOrientation="locked"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".activities.CategorySettingsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">
+
+        </activity>
+        <activity
+            android:name=".activities.CategoryChooseActivity"
+            android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
     </application>

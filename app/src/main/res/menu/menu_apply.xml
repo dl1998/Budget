@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/btnApply"
-        android:title="@string/apply"
         android:icon="@mipmap/ic_done_white_24dp"
+        android:title="@string/apply"
         app:showAsAction="always" />
 </menu>

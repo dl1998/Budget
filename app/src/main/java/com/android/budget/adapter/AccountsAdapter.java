@@ -17,26 +17,20 @@ import java.util.List;
  * Created by dimal on 10.10.2017.
  */
 
-public class AccountArrayAdapter extends ArrayAdapter<AccountListModel> {
+public class AccountsAdapter extends ArrayAdapter<AccountListModel> {
 
     private Context context;
     private LayoutInflater inflater;
     private List<AccountListModel> accountModelList;
     private SparseBooleanArray mSelectedItemsIds;
 
-    public AccountArrayAdapter(Context context, int resourceId, List<AccountListModel> accountModels){
+    public AccountsAdapter(Context context, int resourceId, List<AccountListModel> accountModels) {
         super(context, resourceId, accountModels);
 
         mSelectedItemsIds = new SparseBooleanArray();
         this.context = context;
         this.accountModelList = accountModels;
         inflater = LayoutInflater.from(context);
-    }
-
-    private class ViewHolder{
-        TextView name;
-        TextView balance;
-        TextView currency;
     }
 
     @Override
@@ -96,5 +90,11 @@ public class AccountArrayAdapter extends ArrayAdapter<AccountListModel> {
 
     public SparseBooleanArray getSelectedIds(){
         return mSelectedItemsIds;
+    }
+
+    private class ViewHolder {
+        TextView name;
+        TextView balance;
+        TextView currency;
     }
 }

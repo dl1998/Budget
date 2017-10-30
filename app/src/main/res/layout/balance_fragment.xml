@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/balance_Root_View"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="7dp"
-    android:id="@+id/balance_Root_View"
     android:orientation="vertical">
 
 
     <LinearLayout
+        android:id="@+id/balance_Fragment_Content_View"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/balance_Fragment_Content_View"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"

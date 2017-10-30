@@ -42,6 +42,8 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
 
     private CategoryDAOImpl categoryDAO;
 
+    private Integer selectedAccountId;
+
     private GridView gridViewCategories;
     private ImageButton btnPlus;
     private ImageButton btnMinus;
@@ -52,7 +54,9 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
 
         View view = inflater.inflate(R.layout.balance_fragment, container, false);
 
-        if(MainActivity.preferences.getInt("selectedAccount", -1) == -1){
+        selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
+
+        if (selectedAccountId == -1) {
             View contentView = view.findViewById(R.id.balance_Fragment_Content_View);
             contentView.setEnabled(false);
             contentView.setVisibility(View.INVISIBLE);
@@ -64,11 +68,11 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         db = dbHelper.getWritableDatabase();
         categoryDAO = new CategoryDAOImpl(db);
 
-        btnPlus = (ImageButton) view.findViewById(R.id.btnPlus);
-        btnMinus = (ImageButton) view.findViewById(R.id.btnMinus);
-        gridViewCategories = (GridView) view.findViewById(R.id.gridView);
+        btnPlus = view.findViewById(R.id.btnPlus);
+        btnMinus = view.findViewById(R.id.btnMinus);
+        gridViewCategories = view.findViewById(R.id.gridView);
 
-        final NestedScrollView bottomSheetLayout = (NestedScrollView) view.findViewById(R.id.bottomSheetLayout);
+        final NestedScrollView bottomSheetLayout = view.findViewById(R.id.bottomSheetLayout);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
 
         bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -90,7 +94,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
 
         Toolbar toolbar;
         if (container != null) {
-            toolbar = (Toolbar) container.getRootView().findViewById(R.id.toolbar_main);
+            toolbar = container.getRootView().findViewById(R.id.toolbar_main);
             toolbar.setTitle(R.string.balance);
         }
 
@@ -114,7 +118,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
+        FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.hide();
 
         return view;
@@ -123,7 +127,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     @Override
     public void onResume(){
         super.onResume();
-        loadListOfCurrencies();
+        if (selectedAccountId != -1) loadListOfCurrencies();
     }
 
     public void openCategorySettingWindow(Integer id){
@@ -144,14 +148,18 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
      * Load all currencies from selected account and add it in list
      */
     private void loadListOfCurrencies(){
-        ArrayList<Category> categories = new ArrayList<>(categoryDAO.getAll());
+        ArrayList<Category> categories = new ArrayList<>(categoryDAO.getAllByAccount(selectedAccountId));
+
         Category category = new Category();
         category.setId_category(categories.size());
         category.setSrc_image(R.drawable.plus);
         category.setName_category("Add");
+
         categories.add(category);
+
         CategoriesAdapter adapter = new CategoriesAdapter(getContext(),
                 categories.toArray(new Category[categories.size()]));
+
         gridViewCategories.setAdapter(adapter);
     }
 

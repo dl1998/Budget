@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/account"
-        android:title="@string/account"
-        android:icon="@drawable/account"
         android:enabled="true"
+        android:icon="@drawable/account"
+        android:title="@string/account"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/balance"
-        android:title="@string/balance"
-        android:icon="@drawable/currency_usd"
         android:enabled="true"
+        android:icon="@drawable/currency_usd"
+        android:title="@string/balance"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/statistic"
-        android:title="@string/statistic"
-        android:icon="@drawable/chart_bar"
         android:enabled="true"
+        android:icon="@drawable/chart_bar"
+        android:title="@string/statistic"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/other"
-        android:title="@string/other"
-        android:icon="@drawable/view_headline"
         android:enabled="true"
+        android:icon="@drawable/view_headline"
+        android:title="@string/other"
         app:showAsAction="ifRoom"/>
 </menu>

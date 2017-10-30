@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".activities.IncomeExpensesActivity">
 
@@ -19,31 +19,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3">
             <android.support.constraint.ConstraintLayout
-                android:layout_gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
+                android:layout_gravity="center"
                 android:layout_margin="10dp">
                 <TextView
                     android:id="@+id/tvCost"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/rounded_corner"
+                    android:gravity="center"
                     android:hint="0"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="50sp"
-                    android:textColor="@android:color/white"
-                    android:textAlignment="center"
-                    android:gravity="center"
-                    android:background="@drawable/rounded_corner"
-                    android:layout_height="0dp"
-                    android:layout_width="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageButton
@@ -52,10 +52,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:background="?selectableItemBackground"
-                    app:layout_constraintRight_toRightOf="@id/tvCost"
+                    android:src="@drawable/ic_backspace"
                     app:layout_constraintBottom_toTopOf="@id/tvCost"
-                    app:layout_constraintTop_toBottomOf="@id/tvCost"
-                    android:src="@drawable/ic_backspace" />
+                    app:layout_constraintRight_toRightOf="@id/tvCost"
+                    app:layout_constraintTop_toBottomOf="@id/tvCost" />
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
         <FrameLayout

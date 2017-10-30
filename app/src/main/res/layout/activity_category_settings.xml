@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activities.CategorySettingsActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -28,38 +28,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:title="@string/category_setting"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:title="@string/category_setting" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btnSelectedCategoryImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/toolbar_layout_category"
-        app:layout_anchorGravity="bottom|end"
         android:layout_margin="16dp"
-        android:clickable="true"
         android:backgroundTint="@color/colorAccent"
-        android:src="@drawable/coin"/>
+        android:clickable="true"
+        android:src="@drawable/coin"
+        app:layout_anchor="@id/toolbar_layout_category"
+        app:layout_anchorGravity="bottom|end" />
 
     <LinearLayout
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="45dp">
+        android:padding="45dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <EditText
             android:id="@+id/etCategoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
+            android:hint="@string/account_name"
             android:imeActionLabel="Done"
-            android:maxLines="1"
-            android:maxLength="20"
+            android:imeOptions="actionDone"
             android:inputType="text"
-            android:hint="@string/account_name" />
+            android:maxLength="20"
+            android:maxLines="1" />
 
     </LinearLayout>
 

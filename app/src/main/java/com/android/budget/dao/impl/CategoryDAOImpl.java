@@ -36,7 +36,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         db.beginTransaction();
         try {
 
-            cursor = db.query("category", null, "id_category = ?", new String[]{id.toString()}, null, null, null);
+            cursor = db.query("category", null, "id_category = ?", new String[]{String.valueOf(id)}, null, null, null);
 
             if (cursor != null) {
                 cursor.moveToFirst();
@@ -106,6 +106,49 @@ public class CategoryDAOImpl implements CategoryDAO {
     }
 
     @Override
+    public List<Category> getAllByAccount(Integer accountId) {
+
+        Log.d("myDB", "Category getAllByAccount start");
+
+        List<Category> list = new LinkedList<>();
+
+        Cursor cursor;
+
+        db.beginTransaction();
+        try {
+
+            cursor = db.query("category", null, "id_account = ?", new String[]{String.valueOf(accountId)}, null, null, null);
+
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        Category category = new Category();
+                        category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
+                        category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
+                        category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
+                        category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
+
+                        list.add(category);
+                    } while (cursor.moveToNext());
+                }
+            }
+
+            db.setTransactionSuccessful();
+
+        } finally {
+            db.endTransaction();
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        Log.d("myDB", "Category getAllByAccount end");
+
+        return list;
+    }
+
+    @Override
     public void add(Category category) {
 
         Log.d("myDB", "Category add start");
@@ -132,6 +175,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
     @Override
     public void removeAll() {
+
         Log.d("myDB", "Category removeAll start");
 
         String sql = "DELETE FROM category;";

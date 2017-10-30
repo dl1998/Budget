@@ -1,6 +1,7 @@
 package com.android.budget.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -45,12 +46,14 @@ public class CategorySettingsActivity extends AppCompatActivity {
         db = dbHelper.getWritableDatabase();
         categoryDAO = new CategoryDAOImpl(db);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_category);
+        Toolbar toolbar = findViewById(R.id.toolbar_category);
         setSupportActionBar(toolbar);
 
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-        etCategoryName = (EditText) findViewById(R.id.etCategoryName);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
+        etCategoryName = findViewById(R.id.etCategoryName);
+        fab = findViewById(R.id.btnSelectedCategoryImage);
+        fab.setImageResource(R.drawable.coin);
+        fab.setTag(fab.getId(), R.drawable.coin);
 
         toolbar.setNavigationIcon(R.mipmap.ic_clear_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -62,17 +65,41 @@ public class CategorySettingsActivity extends AppCompatActivity {
 
         initializeData(selectedCategoryId);
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCategoryChooser();
+            }
+        });
+
+    }
+
+    public void openCategoryChooser() {
+        Intent intent = new Intent(this, CategoryChooseActivity.class);
+        startActivityForResult(intent, 1);
     }
 
     public void initializeData(Integer selectedCategoryId){
         if(selectedCategoryId == null){
             category = new Category();
-            category.setSrc_image(R.drawable.coin);
+            category.setSrc_image((Integer) fab.getTag(0));
         } else {
             category = categoryDAO.findCategoryById(selectedCategoryId);
             etCategoryName.setText(category.getName_category());
             fab.setImageResource(category.getSrc_image());
+            fab.setTag(fab.getId(), category.getSrc_image());
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {
+            return;
+        }
+        Integer image_src = data.getIntExtra("selectedImage", -1);
+        fab.setImageResource(image_src);
+        fab.setTag(fab.getId(), image_src);
+        category.setSrc_image(image_src);
     }
 
     @Override

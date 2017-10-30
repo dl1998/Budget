@@ -1,165 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="1"
-    android:weightSum="5"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:weightSum="5">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:weightSum="4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
         <Button
             android:id="@+id/btnNumber1"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="1"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="1" />
         <Button
             android:id="@+id/btnNumber2"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="2"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="2" />
         <Button
             android:id="@+id/btnNumber3"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="3"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="3" />
         <Button
             android:id="@+id/btnPlus"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="+"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="+" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:weightSum="4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
         <Button
             android:id="@+id/btnNumber4"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="4"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="4" />
         <Button
             android:id="@+id/btnNumber5"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="5"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="5" />
         <Button
             android:id="@+id/btnNumber6"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="6"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="6" />
         <Button
             android:id="@+id/btnMinus"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="-"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="-" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:weightSum="4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
         <Button
             android:id="@+id/btnNumber7"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="7"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="7" />
         <Button
             android:id="@+id/btnNumber8"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="8"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="8" />
         <Button
             android:id="@+id/btnNumber9"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="9"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="9" />
         <Button
             android:id="@+id/btnMultiply"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="*"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="*" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:weightSum="4"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="4">
         <Button
             android:id="@+id/btnAddDot"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="."
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="." />
         <Button
             android:id="@+id/btnNumber0"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="0"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="0" />
         <Button
             android:id="@+id/btnEquals"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="="
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="=" />
         <Button
             android:id="@+id/btnDivide"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:text="/"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="/" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="horizontal">
         <Button
             android:id="@+id/btnSpecialAction"
+            style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            style="@style/CalculationButton"
-            android:textAllCaps="false"
+            android:layout_weight="1"
             android:text="Select Category"
-            android:layout_weight="1"/>
+            android:textAllCaps="false" />
     </LinearLayout>
 
 </LinearLayout>

@@ -3,7 +3,6 @@ package com.android.budget.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,24 +49,24 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
 
         //stringBuilder = new StringBuilder();
 
-        tvCost = (TextView) getActivity().findViewById(R.id.tvCost);
+        tvCost = getActivity().findViewById(R.id.tvCost);
 
-        btnNumber0 = (Button) view.findViewById(R.id.btnNumber0);
-        btnNumber1 = (Button) view.findViewById(R.id.btnNumber1);
-        btnNumber2 = (Button) view.findViewById(R.id.btnNumber2);
-        btnNumber3 = (Button) view.findViewById(R.id.btnNumber3);
-        btnNumber4 = (Button) view.findViewById(R.id.btnNumber4);
-        btnNumber5 = (Button) view.findViewById(R.id.btnNumber5);
-        btnNumber6 = (Button) view.findViewById(R.id.btnNumber6);
-        btnNumber7 = (Button) view.findViewById(R.id.btnNumber7);
-        btnNumber8 = (Button) view.findViewById(R.id.btnNumber8);
-        btnNumber9 = (Button) view.findViewById(R.id.btnNumber9);
-        btnAddDot = (Button) view.findViewById(R.id.btnAddDot);
-        btnPlus = (Button) view.findViewById(R.id.btnPlus);
-        btnMinus = (Button) view.findViewById(R.id.btnMinus);
-        btnMultiply = (Button) view.findViewById(R.id.btnMultiply);
-        btnDivide = (Button) view.findViewById(R.id.btnDivide);
-        btnEquals = (Button) view.findViewById(R.id.btnEquals);
+        btnNumber0 = view.findViewById(R.id.btnNumber0);
+        btnNumber1 = view.findViewById(R.id.btnNumber1);
+        btnNumber2 = view.findViewById(R.id.btnNumber2);
+        btnNumber3 = view.findViewById(R.id.btnNumber3);
+        btnNumber4 = view.findViewById(R.id.btnNumber4);
+        btnNumber5 = view.findViewById(R.id.btnNumber5);
+        btnNumber6 = view.findViewById(R.id.btnNumber6);
+        btnNumber7 = view.findViewById(R.id.btnNumber7);
+        btnNumber8 = view.findViewById(R.id.btnNumber8);
+        btnNumber9 = view.findViewById(R.id.btnNumber9);
+        btnAddDot = view.findViewById(R.id.btnAddDot);
+        btnPlus = view.findViewById(R.id.btnPlus);
+        btnMinus = view.findViewById(R.id.btnMinus);
+        btnMultiply = view.findViewById(R.id.btnMultiply);
+        btnDivide = view.findViewById(R.id.btnDivide);
+        btnEquals = view.findViewById(R.id.btnEquals);
 
         btnNumber0.setOnClickListener(this);
         btnNumber1.setOnClickListener(this);

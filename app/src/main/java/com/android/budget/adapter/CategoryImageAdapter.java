@@ -8,34 +8,33 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.budget.R;
-import com.android.budget.entity.Category;
+import com.android.budget.adapter.model.CategoryImageModel;
 
 /**
- * Created by dimal on 24.10.2017.
+ * Created by dl1998 on 30.10.17.
  */
 
-public class CategoriesAdapter extends BaseAdapter {
+public class CategoryImageAdapter extends BaseAdapter {
     private final Context context;
-    private final Category[] categories;
+    private final CategoryImageModel[] models;
     private final LayoutInflater inflater;
 
-    public CategoriesAdapter(Context context, Category[] categories) {
+    public CategoryImageAdapter(Context context, CategoryImageModel[] models) {
         this.context = context;
-        this.categories = categories;
+        this.models = models;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return categories.length;
+        return models.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return categories[position];
+        return models[position];
     }
 
     @Override
@@ -48,17 +47,17 @@ public class CategoriesAdapter extends BaseAdapter {
 
         View view = convertView;
         if (view == null) {
-            view = inflater.inflate(R.layout.circle_button_preset, parent, false);
+            view = inflater.inflate(R.layout.category_image_row, parent, false);
         }
 
-        Category listModel = categories[position];
+        CategoryImageModel listModel = models[position];
 
-        ImageView circleButton = view.findViewById(R.id.circleView);
-        circleButton.setImageResource(listModel.getSrc_image());
+        ImageView circleButton = view.findViewById(R.id.cvButton);
+        circleButton.setImageResource(listModel.getImage_src());
         circleButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         v.startAnimation(AnimationUtils.loadAnimation(context, R.anim.on_touch_button_pressed));
                         break;
@@ -69,7 +68,6 @@ public class CategoriesAdapter extends BaseAdapter {
                 return false;
             }
         });
-        ((TextView) view.findViewById(R.id.circleViewText)).setText(listModel.getName_category());
 
         return view;
     }

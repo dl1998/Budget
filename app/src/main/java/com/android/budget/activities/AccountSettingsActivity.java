@@ -53,10 +53,10 @@ public class AccountSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_settings);
 
         Integer selectedAccountId = (Integer) getIntent().getExtras().getSerializable("accountId");
-        coordinatorLayout = (CoordinatorLayout) findViewById(R.id.account_settings_coordinator_layout);
+        coordinatorLayout = findViewById(R.id.account_settings_coordinator_layout);
 
-        tvSelectedCurrency = (TextView) findViewById(R.id.tvSelectedCurrency);
-        etAccountName = (EditText) findViewById(R.id.etAccountName);
+        tvSelectedCurrency = findViewById(R.id.tvSelectedCurrency);
+        etAccountName = findViewById(R.id.etAccountName);
 
         selectedCurrency = null;
 
@@ -67,7 +67,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
         initializeData(selectedAccountId);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_account);
+        Toolbar toolbar = findViewById(R.id.toolbar_account);
         toolbar.inflateMenu(R.menu.menu_apply);
         setSupportActionBar(toolbar);
 
@@ -132,7 +132,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     public void openCurrenciesChooser(View view) {
         View alertLayout = getLayoutInflater().inflate(R.layout.select_currency_alert_dialog, null);
-        final ListView listCurrencies = (ListView) alertLayout.findViewById(R.id.listCurrencies);
+        final ListView listCurrencies = alertLayout.findViewById(R.id.listCurrencies);
 
         List<Currency> currenciesList = currencyDAO.getAll();
         ArrayList<String> list = new ArrayList<>();
