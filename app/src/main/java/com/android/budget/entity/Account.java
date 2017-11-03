@@ -9,11 +9,11 @@ public class Account {
     private Integer id_account;
     private String name_account;
     private Integer id_currency;
-    private Long balance;
+    private Float balance;
 
     public Account(){}
 
-    public Account(Integer id_account, String name_account, Integer id_currency, Long balance) {
+    public Account(Integer id_account, String name_account, Integer id_currency, Float balance) {
         this.id_account = id_account;
         this.name_account = name_account;
         this.id_currency = id_currency;
@@ -44,11 +44,11 @@ public class Account {
         this.id_currency = id_currency;
     }
 
-    public Long getBalance() {
+    public Float getBalance() {
         return balance;
     }
 
-    public void setBalance(Long balance) {
+    public void setBalance(Float balance) {
         this.balance = balance;
     }
 }

@@ -19,6 +19,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.android.budget.DBHelper;
 import com.android.budget.R;
@@ -26,6 +27,7 @@ import com.android.budget.activities.CategorySettingsActivity;
 import com.android.budget.activities.IncomeExpensesActivity;
 import com.android.budget.activities.MainActivity;
 import com.android.budget.adapter.CategoriesAdapter;
+import com.android.budget.dao.impl.AccountDAOImpl;
 import com.android.budget.dao.impl.CategoryDAOImpl;
 import com.android.budget.entity.Category;
 
@@ -47,6 +49,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     private GridView gridViewCategories;
     private ImageButton btnPlus;
     private ImageButton btnMinus;
+    private TextView tvBalance;
 
     @Nullable
     @Override
@@ -70,7 +73,8 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
 
         btnPlus = view.findViewById(R.id.btnPlus);
         btnMinus = view.findViewById(R.id.btnMinus);
-        gridViewCategories = view.findViewById(R.id.gridView);
+        gridViewCategories = view.findViewById(R.id.gvCircleCategories);
+        tvBalance = view.findViewById(R.id.tvBalance);
 
         final NestedScrollView bottomSheetLayout = view.findViewById(R.id.bottomSheetLayout);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
@@ -113,7 +117,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
                 if(position == (adapter.getCount() - 1)){
                     openCategorySettingWindow(null);
                 } else {
-                    openIncomeExpensesWindow(model.getId_category());
+                    openIncomeExpensesWindow(model.getId_category(), getString(R.string.expenses));
                 }
             }
         });
@@ -127,7 +131,11 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     @Override
     public void onResume(){
         super.onResume();
-        if (selectedAccountId != -1) loadListOfCurrencies();
+        if (selectedAccountId != -1) {
+            loadListOfCurrencies();
+            AccountDAOImpl accountDAO = new AccountDAOImpl(db);
+            tvBalance.setText(getString(R.string.balance) + ": " + accountDAO.findAccountById(selectedAccountId).getBalance());
+        }
     }
 
     public void openCategorySettingWindow(Integer id){
@@ -137,10 +145,11 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         startActivity(intent);
     }
 
-    public void openIncomeExpensesWindow(Integer id){
+    public void openIncomeExpensesWindow(Integer categoryId, String operationType) {
         Intent intent = new Intent(getActivity(), IncomeExpensesActivity.class);
 
-        intent.putExtra("categoryId", id);
+        intent.putExtra("operationType", operationType);
+        if (categoryId != null) intent.putExtra("categoryId", categoryId);
         startActivity(intent);
     }
 
@@ -158,12 +167,10 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         categories.add(category);
 
         CategoriesAdapter adapter = new CategoriesAdapter(getContext(),
-                categories.toArray(new Category[categories.size()]));
+                categories.toArray(new Category[categories.size()]), true);
 
         gridViewCategories.setAdapter(adapter);
     }
-
-
 
     @Override
     public boolean onTouch(View v, MotionEvent event){
@@ -181,14 +188,12 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     @Override
     public void onClick(View view){
 
-        Intent intent = new Intent(getActivity(), IncomeExpensesActivity.class);
-
         switch (view.getId()){
             case R.id.btnMinus:
-                startActivity(intent);
+                openIncomeExpensesWindow(null, getString(R.string.expenses));
                 break;
             case R.id.btnPlus:
-                startActivity(intent);
+                openIncomeExpensesWindow(null, getString(R.string.income));
                 break;
         }
     }

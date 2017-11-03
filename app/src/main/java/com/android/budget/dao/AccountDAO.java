@@ -11,11 +11,15 @@ import java.util.List;
 public interface AccountDAO {
 
     Account findAccountById(Integer id);
+
     List<Account> getAll();
+
     void add(Account account);
+
     void removeAll();
+
     void removeById(Integer id);
-    void removeByName(String name);
-    void updateById(Integer id, Account account);
+
+    void updateById(Account account);
 
 }

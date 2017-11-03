@@ -11,11 +11,17 @@ import java.util.List;
 public interface CurrencyDAO {
 
     Currency findCurrencyById(Integer id);
+
     Currency findCurrencyByName(String name);
+
     List<Currency> getAll();
+
     void add(Currency currency);
+
     void removeAll();
+
     void removeById(Integer id);
-    void updateById(Integer id, Currency currency);
+
+    void updateById(Currency currency);
 
 }

@@ -26,84 +26,17 @@ public class CurrencyDAOImpl implements CurrencyDAO {
         this.db = db;
     }
 
-    @Override
-    public Currency findCurrencyById(Integer id) {
+    private Currency getCurrency(Cursor cursor) {
 
-        Log.d("myDB", "Currency findCurrencyById start");
-
-        Currency currency = null;
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("currency", null, "id_currency = ?", new String[]{id.toString()}, null, null, null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-
-                currency = new Currency();
-                currency.setId_currency(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                currency.setName_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-                currency.setIso_name_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
-
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        Log.d("myDB", "Currency findCurrencyById end");
+        Currency currency = new Currency();
+        currency.setId_currency(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
+        currency.setName_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
+        currency.setIso_name_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
 
         return currency;
     }
 
-    @Override
-    public Currency findCurrencyByName(String name) {
-
-        Log.d("myDB", "Currency findCurrencyByName start");
-
-        Currency currency = null;
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("currency", null, "name_currency = ?", new String[]{name}, null, null, null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-
-                currency = new Currency();
-                currency.setId_currency(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                currency.setName_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-                currency.setIso_name_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
-
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        Log.d("myDB", "Currency findCurrencyByName end");
-
-        return currency;
-    }
-
-    @Override
-    public List<Currency> getAll() {
-
-        Log.d("myDB", "Currency getAll start");
+    private List<Currency> get(String selection, String[] selectionArgs) {
 
         List<Currency> list = new LinkedList<>();
 
@@ -112,15 +45,12 @@ public class CurrencyDAOImpl implements CurrencyDAO {
         db.beginTransaction();
         try {
 
-            cursor = db.query("currency", null, null, null, null, null, null);
+            cursor = db.query("currency", null, selection, selectionArgs, null, null, null);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
-                        Currency currency = new Currency();
-                        currency.setId_currency(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                        currency.setName_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-                        currency.setIso_name_currency(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2))));
+                        Currency currency = getCurrency(cursor);
 
                         list.add(currency);
                     } while (cursor.moveToNext());
@@ -128,7 +58,6 @@ public class CurrencyDAOImpl implements CurrencyDAO {
             }
 
             db.setTransactionSuccessful();
-
         } finally {
             db.endTransaction();
         }
@@ -136,6 +65,55 @@ public class CurrencyDAOImpl implements CurrencyDAO {
         if (cursor != null) {
             cursor.close();
         }
+
+        return list;
+    }
+
+    private void removeUpdate(String sql) {
+
+        SQLiteStatement statement = db.compileStatement(sql);
+        db.beginTransaction();
+        try {
+
+            statement.executeUpdateDelete();
+            db.setTransactionSuccessful();
+
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    @Override
+    public Currency findCurrencyById(Integer id) {
+
+        Log.d("myDB", "Currency findCurrencyById start");
+
+        List<Currency> list = get("id_currency = ?", new String[]{String.valueOf(id)});
+
+        Log.d("myDB", "Currency findCurrencyById end");
+
+        return list.get(0);
+    }
+
+    @Override
+    public Currency findCurrencyByName(String name) {
+
+        Log.d("myDB", "Currency findCurrencyByName start");
+
+        List<Currency> list = get("name_currency = ?", new String[]{name});
+
+        Log.d("myDB", "Currency findCurrencyByName end");
+
+        return list.get(0);
+    }
+
+    @Override
+    public List<Currency> getAll() {
+
+        Log.d("myDB", "Currency getAll start");
+
+        List<Currency> list = get(null, null);
 
         Log.d("myDB", "Currency getAll end");
 
@@ -169,17 +147,7 @@ public class CurrencyDAOImpl implements CurrencyDAO {
 
         Log.d("myDB", "Currency removeAll start");
 
-        String sql = "DELETE FROM currency;";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        removeUpdate("DELETE FROM currency;");
 
         Log.d("myDB", "Currency removeAll end");
 
@@ -190,47 +158,24 @@ public class CurrencyDAOImpl implements CurrencyDAO {
 
         Log.d("myDB", "Currency removeById start");
 
-        String sql = "DELETE FROM currency WHERE id_currency = " + id + ";";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        removeUpdate("DELETE FROM currency WHERE id_currency = " + id + ";");
 
         Log.d("myDB", "Currency removeById end");
 
     }
 
     @Override
-    public void updateById(Integer id, Currency currency) {
+    public void updateById(Currency currency) {
 
         Log.d("myDB", "Currency updateById start");
 
         String sql = "UPDATE currency SET name_currency = \"" +
                 currency.getName_currency() + "\", " +
                 "iso_name_currency = \"" + currency.getIso_name_currency() + "\" " +
-                "WHERE id_currency = " + id + ";";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+                "WHERE id_currency = " + currency.getId_currency() + ";";
+        removeUpdate(sql);
 
         Log.d("myDB", "Currency updateById end");
 
-    }
-
-    public void closeDB() {
-        db.close();
     }
 }

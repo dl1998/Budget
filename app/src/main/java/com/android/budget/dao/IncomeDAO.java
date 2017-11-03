@@ -24,5 +24,5 @@ public interface IncomeDAO {
 
     void removeById(Integer id);
 
-    void updateById(Integer id, Income income);
+    void updateById(Income income);
 }

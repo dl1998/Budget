@@ -39,7 +39,7 @@ public class FragmentStatistic extends Fragment {
         Toolbar toolbar;
         if (container != null) {
             toolbar = container.getRootView().findViewById(R.id.toolbar_main);
-            toolbar.setTitle(R.string.statistic);
+            toolbar.setTitle(R.string.statistics);
         }
 
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
@@ -49,8 +49,9 @@ public class FragmentStatistic extends Fragment {
 
         chart.setHoleRadius(60f);
         chart.setRotationEnabled(false);
-        chart.setDrawEntryLabels(true);
+        chart.setDrawEntryLabels(false);
         chart.setEntryLabelColor(Color.BLACK);
+        chart.setDrawCenterText(false);
         Description description = new Description();
         description.setEnabled(false);
         chart.setDescription(description);
@@ -71,16 +72,26 @@ public class FragmentStatistic extends Fragment {
             yEntries.add(new PieEntry(dataObjectsY[i], dataObjectsX[i]));
         }
 
-        PieDataSet set = new PieDataSet(yEntries, "Election Results");
-        set.setColors(Color.GREEN, Color.YELLOW, Color.RED, Color.BLUE, Color.CYAN, Color.MAGENTA, Color.LTGRAY);
-        set.setValueTextSize(15f);
+        PieDataSet set = new PieDataSet(yEntries, null);
+
+        int[] array = getResources().getIntArray(R.array.colors);
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (Integer color : array) {
+            colors.add(color);
+
+        }
+
+        set.setColors(colors);
+        set.setValueTextSize(20f);
         set.setValueTextColor(Color.BLACK);
 
         Legend legend = chart.getLegend();
+
         legend.setForm(Legend.LegendForm.CIRCLE);
         legend.setTextSize(15f);
-        legend.setOrientation(Legend.LegendOrientation.VERTICAL);
-        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
 
         PieData data = new PieData(set);
         chart.setData(data);

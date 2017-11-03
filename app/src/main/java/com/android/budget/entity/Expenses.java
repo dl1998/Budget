@@ -10,13 +10,13 @@ public class Expenses {
 
     private Integer id_expenses;
     private Date date_expenses;
-    private Integer cost_expenses;
+    private Float cost_expenses;
     private Integer id_category;
 
     public Expenses() {
     }
 
-    public Expenses(Integer id_expenses, Date date_expenses, Integer cost_expenses, Integer id_category) {
+    public Expenses(Integer id_expenses, Date date_expenses, Float cost_expenses, Integer id_category) {
 
         this.id_expenses = id_expenses;
         this.date_expenses = date_expenses;
@@ -40,11 +40,11 @@ public class Expenses {
         this.date_expenses = date_expenses;
     }
 
-    public Integer getCost_expenses() {
+    public Float getCost_expenses() {
         return cost_expenses;
     }
 
-    public void setCost_expenses(Integer cost_expenses) {
+    public void setCost_expenses(Float cost_expenses) {
         this.cost_expenses = cost_expenses;
     }
 

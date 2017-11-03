@@ -14,7 +14,7 @@ public class AccountListModel {
 
     private Integer id;
     private String name;
-    private Long balance;
+    private Float balance;
     private String currency;
 
     public AccountListModel(SQLiteDatabase db, Account account){
@@ -26,7 +26,7 @@ public class AccountListModel {
         this.currency = currencyDAO.findCurrencyById(account.getId_currency()).getIso_name_currency();
     }
 
-    public AccountListModel(String name, Long balance, String currency){
+    public AccountListModel(String name, Float balance, String currency) {
         this.name = name;
         this.balance = balance;
         this.currency = currency;
@@ -40,11 +40,11 @@ public class AccountListModel {
         this.name = name;
     }
 
-    public Long getBalance() {
+    public Float getBalance() {
         return balance;
     }
 
-    public void setBalance(Long balance) {
+    public void setBalance(Float balance) {
         this.balance = balance;
     }
 

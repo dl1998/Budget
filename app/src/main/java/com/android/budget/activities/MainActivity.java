@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-
         preferences = getSharedPreferences("mySettings", Context.MODE_PRIVATE);
 
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);

@@ -47,8 +47,6 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
                              @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.calculation_fragment, container, false);
 
-        //stringBuilder = new StringBuilder();
-
         tvCost = getActivity().findViewById(R.id.tvCost);
 
         btnNumber0 = view.findViewById(R.id.btnNumber0);
@@ -122,7 +120,7 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
         }
     }
 
-    public void optionButtonPressed(View view){
+    private void optionButtonPressed(View view) {
         try {
             if (!optionButtonPressed) {
                 doLastOptionButtonAction();
@@ -140,7 +138,7 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
         }
     }
 
-    public void doLastOptionButtonAction() throws ArithmeticException{
+    private void doLastOptionButtonAction() throws ArithmeticException {
         if (lastOptionButton != null) {
             switch (lastOptionButton) {
                 case "+":
@@ -168,7 +166,11 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
         }
     }
 
-    public void displayNumber(){
+    /*public Button getSpecialActionButton(){
+        return this.btnSpecialAction;
+    }*/
+
+    private void displayNumber() {
         if(String.valueOf(number).matches("^\\d+\\.0{0,2}$")) tvCost.setText(String.valueOf(number.intValue()));
         else tvCost.setText(String.valueOf(number));
     }
@@ -178,7 +180,7 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
      *
      * @param text string which must be added to exists string
      */
-    public void addText(String text){
+    private void addText(String text) {
         /*
          * A regex checking if the expression starts from zero. The next number could be just
          * one dot and two numbers or noting, else checked expression starts from [1-9] and then

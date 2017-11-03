@@ -108,12 +108,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
                         account = new Account();
                         account.setId_currency(selectedCurrency.getId_currency());
                         account.setName_account(etAccountName.getText().toString());
-                        account.setBalance(0L);
+                        account.setBalance(0F);
                         accountDAO.add(account);
                     } else {
                         account.setId_currency(selectedCurrency.getId_currency());
                         account.setName_account(etAccountName.getText().toString());
-                        accountDAO.updateById(account.getId_account(), account);
+                        accountDAO.updateById(account);
                     }
 
                     AccountSettingsActivity.this.finish();

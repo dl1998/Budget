@@ -29,8 +29,12 @@ import com.android.budget.adapter.model.AccountListModel;
 import com.android.budget.dao.impl.AccountDAOImpl;
 import com.android.budget.dao.impl.CategoryDAOImpl;
 import com.android.budget.dao.impl.CurrencyDAOImpl;
+import com.android.budget.dao.impl.ExpensesDAOImpl;
+import com.android.budget.dao.impl.IncomeDAOImpl;
 import com.android.budget.entity.Account;
 import com.android.budget.entity.Category;
+import com.android.budget.entity.Expenses;
+import com.android.budget.entity.Income;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +217,15 @@ public class FragmentAccount extends Fragment {
 
     private void removeDataByAccountId(Integer id) {
         ArrayList<Category> categories = new ArrayList<>(categoryDAO.getAllByAccount(id));
+        ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
+        IncomeDAOImpl incomeDAO = new IncomeDAOImpl(db);
         for (Category category : categories) {
+            for (Expenses expenses : expensesDAO.getAllByCategory(category.getId_category())) {
+                expensesDAO.removeById(expenses.getId_expenses());
+            }
+            for (Income income : incomeDAO.getAllByAccount(id)) {
+                incomeDAO.removeById(income.getId_income());
+            }
             categoryDAO.removeById(category.getId_category());
         }
         accountDAO.removeById(id);

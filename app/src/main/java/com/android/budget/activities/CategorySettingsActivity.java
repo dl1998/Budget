@@ -74,6 +74,9 @@ public class CategorySettingsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Open the category image selection activity
+     */
     public void openCategoryChooser() {
         Intent intent = new Intent(this, CategoryChooseActivity.class);
         startActivityForResult(intent, 1);
@@ -82,7 +85,7 @@ public class CategorySettingsActivity extends AppCompatActivity {
     public void initializeData(Integer selectedCategoryId){
         if(selectedCategoryId == null){
             category = new Category();
-            category.setSrc_image((Integer) fab.getTag(0));
+            category.setSrc_image((Integer) fab.getTag(fab.getId()));
         } else {
             category = categoryDAO.findCategoryById(selectedCategoryId);
             etCategoryName.setText(category.getName_category());
@@ -119,7 +122,7 @@ public class CategorySettingsActivity extends AppCompatActivity {
                         category.setName_category(etCategoryName.getText().toString());
                         categoryDAO.add(category);
                     } else {
-                        categoryDAO.updateById(category.getId_category(), category);
+                        categoryDAO.updateById(category);
                     }
 
                     CategorySettingsActivity.this.finish();

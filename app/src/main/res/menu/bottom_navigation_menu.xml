@@ -17,7 +17,7 @@
         android:id="@+id/statistic"
         android:enabled="true"
         android:icon="@drawable/chart_bar"
-        android:title="@string/statistic"
+        android:title="@string/statistics"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/other"

@@ -27,48 +27,18 @@ public class IncomeDAOImpl implements IncomeDAO {
         this.db = db;
     }
 
-    @Override
-    public Income findIncomeById(Integer id) {
+    private Income getIncome(Cursor cursor) {
 
-        Log.d("myDB", "Income findIncomeById start");
-
-        Income income = null;
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("income", null, "id_income = ?", new String[]{String.valueOf(id)}, null, null, null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-
-                income = new Income();
-                income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                income.setDate_income(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
-                income.setCost_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                income.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
-
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        Log.d("myDB", "Income findIncomeById end");
+        Income income = new Income();
+        income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
+        income.setDate_income(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
+        income.setCost_income(cursor.getFloat(cursor.getColumnIndex(cursor.getColumnName(2))));
+        income.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
 
         return income;
     }
 
-    @Override
-    public List<Income> getAll() {
-
-        Log.d("myDB", "Income getAll start");
+    private List<Income> get(String selection, String[] selectionArgs) {
 
         List<Income> list = new LinkedList<>();
 
@@ -77,18 +47,12 @@ public class IncomeDAOImpl implements IncomeDAO {
         db.beginTransaction();
         try {
 
-            cursor = db.query("income", null, null, null, null, null, null);
+            cursor = db.query("income", null, selection, selectionArgs, null, null, null);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
-                        Income income = new Income();
-                        income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                        income.setDate_income(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
-                        income.setCost_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                        income.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
-
-                        list.add(income);
+                        list.add(getIncome(cursor));
                     } while (cursor.moveToNext());
                 }
             }
@@ -102,6 +66,43 @@ public class IncomeDAOImpl implements IncomeDAO {
         if (cursor != null) {
             cursor.close();
         }
+
+        return list;
+    }
+
+    private void removeUpdate(String sql) {
+
+        SQLiteStatement statement = db.compileStatement(sql);
+        db.beginTransaction();
+        try {
+
+            statement.executeUpdateDelete();
+            db.setTransactionSuccessful();
+
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    @Override
+    public Income findIncomeById(Integer id) {
+
+        Log.d("myDB", "Income findIncomeById start");
+
+        List<Income> list = get("id_income = ?", new String[]{String.valueOf(id)});
+
+        Log.d("myDB", "Income findIncomeById end");
+
+        return list.get(0);
+    }
+
+    @Override
+    public List<Income> getAll() {
+
+        Log.d("myDB", "Income getAll start");
+
+        List<Income> list = get(null, null);
 
         Log.d("myDB", "Income getAll end");
 
@@ -113,38 +114,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income getAllByAccount start");
 
-        List<Income> list = new LinkedList<>();
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("income", null, "id_account = ?", new String[]{String.valueOf(accountId)}, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        Income income = new Income();
-                        income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                        income.setDate_income(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
-                        income.setCost_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                        income.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
-
-                        list.add(income);
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
+        List<Income> list = get("id_account = ?", new String[]{String.valueOf(accountId)});
 
         Log.d("myDB", "Income getAllByAccount end");
 
@@ -156,40 +126,8 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income getAllByDateForAccount start");
 
-        List<Income> list = new LinkedList<>();
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            Long int_date = date.getTime();
-
-            cursor = db.query("income", null, "id_account = ? and date_income = ?", new String[]{String.valueOf(accountId), String.valueOf(int_date)}, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        Income income = new Income();
-                        income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                        income.setDate_income(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
-                        income.setCost_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                        income.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
-
-                        list.add(income);
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
+        Long int_date = date.getTime();
+        List<Income> list = get("id_account = ? and date_income = ?", new String[]{String.valueOf(accountId), String.valueOf(int_date)});
 
         Log.d("myDB", "Income getAllByDateForAccount end");
 
@@ -208,7 +146,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
             statement.clearBindings();
             statement.bindLong(1, income.getDate_income().getTime());
-            statement.bindLong(2, income.getCost_income());
+            statement.bindDouble(2, income.getCost_income());
             statement.bindLong(3, income.getId_account());
             statement.execute();
             db.setTransactionSuccessful();
@@ -226,17 +164,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income removeAll start");
 
-        String sql = "DELETE FROM income;";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        removeUpdate("DELETE FROM income;");
 
         Log.d("myDB", "Income removeAll end");
 
@@ -247,44 +175,25 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income removeById start");
 
-        String sql = "DELETE FROM income WHERE id_income = " + id + ";";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        removeUpdate("DELETE FROM income WHERE id_income = " + id + ";");
 
         Log.d("myDB", "Income removeById end");
 
     }
 
     @Override
-    public void updateById(Integer id, Income income) {
+    public void updateById(Income income) {
 
         Log.d("myDB", "Income updateById start");
 
         Long long_date = income.getDate_income().getTime();
 
-        String sql = "UPDATE income SET date_income = " +
-                long_date + ", " +
+        String sql = "UPDATE income SET " +
+                "date_income = " + long_date + ", " +
                 "cost_income = " + income.getCost_income() + ", " +
                 "id_account = " + income.getId_account() + " " +
-                "WHERE id_income = " + id + ";";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+                "WHERE id_income = " + income.getId_income() + ";";
+        removeUpdate(sql);
 
         Log.d("myDB", "Income updateById end");
 

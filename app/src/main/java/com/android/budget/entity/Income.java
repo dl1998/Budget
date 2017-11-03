@@ -10,13 +10,13 @@ public class Income {
 
     private Integer id_income;
     private Date date_income;
-    private Integer cost_income;
+    private Float cost_income;
     private Integer id_account;
 
     public Income() {
     }
 
-    public Income(Integer id_income, Date date_income, Integer cost_income, Integer id_account) {
+    public Income(Integer id_income, Date date_income, Float cost_income, Integer id_account) {
         this.id_income = id_income;
         this.date_income = date_income;
         this.cost_income = cost_income;
@@ -39,11 +39,11 @@ public class Income {
         this.date_income = date_income;
     }
 
-    public Integer getCost_income() {
+    public Float getCost_income() {
         return cost_income;
     }
 
-    public void setCost_income(Integer cost_income) {
+    public void setCost_income(Float cost_income) {
         this.cost_income = cost_income;
     }
 

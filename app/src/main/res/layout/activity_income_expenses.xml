@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/income_expenses_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -18,23 +19,37 @@
             android:id="@+id/tvSelectedDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:textAlignment="center"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3">
+            android:layout_weight="1">
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="75dp"
                 android:layout_gravity="center"
-                android:layout_margin="10dp">
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_corner">
+
+                <Button
+                    android:id="@+id/btnClear"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:background="?selectableItemBackground"
+                    android:text="C"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp"
+                    app:layout_constraintBottom_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
+
                 <TextView
                     android:id="@+id/tvCost"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:background="@drawable/rounded_corner"
                     android:gravity="center"
                     android:hint="0"
                     android:textAlignment="center"
@@ -42,28 +57,43 @@
                     android:textColorHint="@android:color/white"
                     android:textSize="50sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintLeft_toRightOf="@id/btnClear"
+                    app:layout_constraintRight_toLeftOf="@id/btnBackspace"
                     app:layout_constraintTop_toTopOf="parent"/>
 
                 <ImageButton
                     android:id="@+id/btnBackspace"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
                     android:background="?selectableItemBackground"
                     android:src="@drawable/ic_backspace"
-                    app:layout_constraintBottom_toTopOf="@id/tvCost"
-                    app:layout_constraintRight_toRightOf="@id/tvCost"
-                    app:layout_constraintTop_toBottomOf="@id/tvCost" />
+                    app:layout_constraintBottom_toTopOf="parent"
+                    app:layout_constraintRight_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent" />
             </android.support.constraint.ConstraintLayout>
         </LinearLayout>
-        <FrameLayout
-            android:id="@+id/income_expenses_fragment"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5">
-        </FrameLayout>
+            android:layout_weight="5"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/income_expenses_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"></FrameLayout>
+
+            <Button
+                android:id="@+id/btnSpecialAction"
+                style="@style/CalculationButton"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="@string/select_category"
+                android:textAllCaps="false" />
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

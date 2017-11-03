@@ -25,47 +25,18 @@ public class CategoryDAOImpl implements CategoryDAO {
         this.db = db;
     }
 
-    @Override
-    public Category findCategoryById(Integer id) {
-        Log.d("myDB", "Category findCategoryById start");
+    private Category getCategory(Cursor cursor) {
 
-        Category category = null;
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("category", null, "id_category = ?", new String[]{String.valueOf(id)}, null, null, null);
-
-            if (cursor != null) {
-                cursor.moveToFirst();
-
-                category = new Category();
-                category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-                category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
-
-                db.setTransactionSuccessful();
-            }
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        Log.d("myDB", "Category findCategoryById end");
+        Category category = new Category();
+        category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
+        category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
+        category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
+        category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
 
         return category;
     }
 
-    @Override
-    public List<Category> getAll() {
-
-        Log.d("myDB", "Category getAll start");
+    private List<Category> get(String selection, String[] selectionArgs) {
 
         List<Category> list = new LinkedList<>();
 
@@ -74,16 +45,12 @@ public class CategoryDAOImpl implements CategoryDAO {
         db.beginTransaction();
         try {
 
-            cursor = db.query("category", null, null, null, null, null, null);
+            cursor = db.query("category", null, selection, selectionArgs, null, null, null);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
-                        Category category = new Category();
-                        category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                        category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-                        category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                        category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
+                        Category category = getCategory(cursor);
 
                         list.add(category);
                     } while (cursor.moveToNext());
@@ -99,6 +66,41 @@ public class CategoryDAOImpl implements CategoryDAO {
         if (cursor != null) {
             cursor.close();
         }
+
+        return list;
+
+    }
+
+    private void removeUpdate(String sql) {
+        SQLiteStatement statement = db.compileStatement(sql);
+        db.beginTransaction();
+        try {
+
+            statement.executeUpdateDelete();
+            db.setTransactionSuccessful();
+
+        } finally {
+            db.endTransaction();
+        }
+    }
+
+    @Override
+    public Category findCategoryById(Integer id) {
+        Log.d("myDB", "Category findCategoryById start");
+
+        List<Category> list = get("id_category = ?", new String[]{String.valueOf(id)});
+
+        Log.d("myDB", "Category findCategoryById end");
+
+        return list.get(0);
+    }
+
+    @Override
+    public List<Category> getAll() {
+
+        Log.d("myDB", "Category getAll start");
+
+        List<Category> list = get(null, null);
 
         Log.d("myDB", "Category getAll end");
 
@@ -110,38 +112,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         Log.d("myDB", "Category getAllByAccount start");
 
-        List<Category> list = new LinkedList<>();
-
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("category", null, "id_account = ?", new String[]{String.valueOf(accountId)}, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        Category category = new Category();
-                        category.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-                        category.setName_category(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-                        category.setSrc_image(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
-                        category.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
-
-                        list.add(category);
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
+        List<Category> list = get("id_account = ?", new String[]{String.valueOf(accountId)});
 
         Log.d("myDB", "Category getAllByAccount end");
 
@@ -178,17 +149,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         Log.d("myDB", "Category removeAll start");
 
-        String sql = "DELETE FROM category;";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        removeUpdate("DELETE FROM category;");
 
         Log.d("myDB", "Category removeAll end");
     }
@@ -198,24 +159,14 @@ public class CategoryDAOImpl implements CategoryDAO {
 
         Log.d("myDB", "Category removeById start");
 
-        String sql = "DELETE FROM category WHERE id_category = " + id + ";";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        removeUpdate("DELETE FROM category WHERE id_category = " + id + ";");
 
         Log.d("myDB", "Category removeById end");
 
     }
 
     @Override
-    public void updateById(Integer id, Category category) {
+    public void updateById(Category category) {
 
         Log.d("myDB", "Category updateById start");
 
@@ -223,17 +174,8 @@ public class CategoryDAOImpl implements CategoryDAO {
                 category.getName_category() + "\", " +
                 "src_image = " + category.getSrc_image() + ", " +
                 "id_account = " + category.getId_account() + " " +
-                "WHERE id_category = " + id + ";";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+                "WHERE id_category = " + category.getId_category() + ";";
+        removeUpdate(sql);
 
         Log.d("myDB", "Category updateById end");
 

@@ -21,10 +21,12 @@ public class CategoriesAdapter extends BaseAdapter {
     private final Context context;
     private final Category[] categories;
     private final LayoutInflater inflater;
+    private final Boolean circleMode;
 
-    public CategoriesAdapter(Context context, Category[] categories) {
+    public CategoriesAdapter(Context context, Category[] categories, Boolean circleMode) {
         this.context = context;
         this.categories = categories;
+        this.circleMode = circleMode;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -48,7 +50,8 @@ public class CategoriesAdapter extends BaseAdapter {
 
         View view = convertView;
         if (view == null) {
-            view = inflater.inflate(R.layout.circle_button_preset, parent, false);
+            if (circleMode) view = inflater.inflate(R.layout.circle_button_preset, parent, false);
+            else view = inflater.inflate(R.layout.square_button_preset, parent, false);
         }
 
         Category listModel = categories[position];

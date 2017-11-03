@@ -24,5 +24,5 @@ public interface ExpensesDAO {
 
     void removeById(Integer id);
 
-    void updateById(Integer id, Expenses expenses);
+    void updateById(Expenses expenses);
 }
