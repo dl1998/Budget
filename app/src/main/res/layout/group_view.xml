@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/group_view_category_image"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="40dp"
+        android:background="@drawable/my_square_button"
+        android:padding="4dp"
+        android:src="@drawable/fruit"
+        app:layout_constraintLeft_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/group_view_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:text="Category Name"
+        app:layout_constraintBottom_toBottomOf="@id/group_view_category_image"
+        app:layout_constraintLeft_toRightOf="@id/group_view_category_image"
+        app:layout_constraintTop_toTopOf="@id/group_view_category_image" />
+
+    <TextView
+        android:id="@+id/group_view_expenses_count"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/my_square_button"
+        android:gravity="center"
+        android:paddingEnd="2dp"
+        android:paddingStart="2dp"
+        android:text="1"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@id/group_view_category_name"
+        app:layout_constraintLeft_toRightOf="@id/group_view_category_name"
+        app:layout_constraintTop_toTopOf="@id/group_view_category_name" />
+
+    <TextView
+        android:id="@+id/group_view_summary_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="20.00 EUR"
+        app:layout_constraintBottom_toBottomOf="@id/group_view_category_image"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/group_view_category_image" />
+
+</android.support.constraint.ConstraintLayout>

@@ -72,6 +72,8 @@ public class FragmentSelectCategory extends Fragment {
                 expenses.setDate_expenses(incomeExpensesActivity.getDate());
                 expenses.setId_category(model.getId_category());
 
+                expensesDAO.add(expenses);
+
                 Float balance = account.getBalance() - expenses.getCost_expenses();
                 balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
 

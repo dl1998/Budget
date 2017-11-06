@@ -3,13 +3,10 @@ package com.android.budget.fragments;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,14 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.android.budget.activities.CategorySettingsActivity;
 import com.android.budget.activities.IncomeExpensesActivity;
+import com.android.budget.activities.IncomeExpensesInfoActivity;
 import com.android.budget.activities.MainActivity;
 import com.android.budget.adapter.CategoriesAdapter;
 import com.android.budget.dao.impl.AccountDAOImpl;
@@ -49,7 +47,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     private GridView gridViewCategories;
     private ImageButton btnPlus;
     private ImageButton btnMinus;
-    private TextView tvBalance;
+    private Button btnBalance;
 
     @Nullable
     @Override
@@ -74,27 +72,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         btnPlus = view.findViewById(R.id.btnPlus);
         btnMinus = view.findViewById(R.id.btnMinus);
         gridViewCategories = view.findViewById(R.id.gvCircleCategories);
-        tvBalance = view.findViewById(R.id.tvBalance);
-
-        final NestedScrollView bottomSheetLayout = view.findViewById(R.id.bottomSheetLayout);
-        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout);
-
-        bottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (BottomSheetBehavior.STATE_DRAGGING == newState) {
-                    gridViewCategories.setEnabled(false);
-                } else if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
-                    gridViewCategories.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                gridViewCategories.animate().scaleX(1 - slideOffset).scaleY(1 - slideOffset).setDuration(0)
-                        .start();
-            }
-        });
+        btnBalance = view.findViewById(R.id.tvBalance);
 
         Toolbar toolbar;
         if (container != null) {
@@ -107,6 +85,14 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
 
         btnPlus.setOnClickListener(this);
         btnMinus.setOnClickListener(this);
+
+        btnBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), IncomeExpensesInfoActivity.class);
+                startActivity(intent);
+            }
+        });
 
         gridViewCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -134,7 +120,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         if (selectedAccountId != -1) {
             loadListOfCurrencies();
             AccountDAOImpl accountDAO = new AccountDAOImpl(db);
-            tvBalance.setText(getString(R.string.balance) + ": " + accountDAO.findAccountById(selectedAccountId).getBalance());
+            btnBalance.setText(getString(R.string.balance) + ": " + accountDAO.findAccountById(selectedAccountId).getBalance());
         }
     }
 

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.android.budget.Converter;
 import com.android.budget.dao.ExpensesDAO;
 import com.android.budget.entity.Expenses;
 
@@ -28,10 +29,9 @@ public class ExpensesDAOImpl implements ExpensesDAO {
     }
 
     private Expenses getExpenses(Cursor cursor) {
-
         Expenses expenses = new Expenses();
         expenses.setId_expenses(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-        expenses.setDate_expenses(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
+        expenses.setDate_expenses(Converter.getDate(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1)))));
         expenses.setCost_expenses(cursor.getFloat(cursor.getColumnIndex(cursor.getColumnName(2))));
         expenses.setId_category(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
 
@@ -125,8 +125,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses getAllByDateForCategory start");
 
-        Long int_date = date.getTime();
-        List<Expenses> list = get("id_category = ? and date_expenses = ?", new String[]{String.valueOf(categoryId), String.valueOf(int_date)});
+        List<Expenses> list = get("id_category = ? and date_expenses = ?", new String[]{String.valueOf(categoryId), Converter.getTextDate(date)});
 
         Log.d("myDB", "Expenses getAllByDateForCategory end");
 
@@ -144,7 +143,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
         try {
 
             statement.clearBindings();
-            statement.bindLong(1, expenses.getDate_expenses().getTime());
+            statement.bindString(1, Converter.getTextDate(expenses.getDate_expenses()));
             statement.bindDouble(2, expenses.getCost_expenses());
             statement.bindLong(3, expenses.getId_category());
             statement.execute();
@@ -185,10 +184,10 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses updateById start");
 
-        Long long_date = expenses.getDate_expenses().getTime();
+        String date = Converter.getTextDate(expenses.getDate_expenses());
 
-        String sql = "UPDATE expenses SET date_expenses = " +
-                long_date + ", " +
+        String sql = "UPDATE expenses SET " +
+                "date_expenses = \"" + date + "\", " +
                 "cost_expenses = " + expenses.getCost_expenses() + ", " +
                 "id_category = " + expenses.getId_category() + " " +
                 "WHERE id_expenses = " + expenses.getId_expenses() + ";";

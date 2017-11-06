@@ -56,14 +56,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.execSQL("create table expenses ( " +
                 "id_expenses integer primary key autoincrement, " +
-                "date_expenses integer, " +
+                "date_expenses text, " +
                 "cost_expenses real, " +
                 "id_category integer " +
                 ");");
 
         db.execSQL("create table income ( " +
                 "id_income integer primary key autoincrement, " +
-                "date_income integer, " +
+                "date_income text, " +
                 "cost_income real, " +
                 "id_account integer " +
                 ");");

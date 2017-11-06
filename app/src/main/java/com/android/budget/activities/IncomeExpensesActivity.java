@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.android.budget.Converter;
 import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.android.budget.dao.impl.AccountDAOImpl;
@@ -56,6 +57,8 @@ public class IncomeExpensesActivity extends AppCompatActivity {
     private String operationType;
     private Integer selectedAccountId;
     private Integer selectedCategoryId;
+    private Integer selectedElementId;
+    private Float startCost;
 
     private DBHelper dbHelper;
     private SQLiteDatabase db;
@@ -66,6 +69,8 @@ public class IncomeExpensesActivity extends AppCompatActivity {
     private CategoryDAOImpl categoryDAO;
     private Income income;
     private IncomeDAOImpl incomeDAO;
+    private Expenses expenses;
+    private ExpensesDAOImpl expensesDAO;
 
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -86,6 +91,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         operationType = getIntent().getExtras().getString("operationType");
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
         selectedCategoryId = getIntent().getIntExtra("categoryId", -1);
+        selectedElementId = getIntent().getIntExtra("elementId", -1);
 
         dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
@@ -121,6 +127,35 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         });
 
         tvSelectedDate.setText(dateFormat.format(selectedDate.getTime()) + "");
+
+        initData();
+    }
+
+    public void initData() {
+
+        Float cost;
+        Date date;
+
+        if (selectedElementId != -1) {
+            if (operationType.equals(getString(R.string.income))) {
+                incomeDAO = new IncomeDAOImpl(db);
+                income = incomeDAO.findIncomeById(selectedElementId);
+
+                cost = income.getCost_income();
+                date = income.getDate_income();
+            } else {
+                expensesDAO = new ExpensesDAOImpl(db);
+                expenses = expensesDAO.findExpensesById(selectedElementId);
+
+                cost = expenses.getCost_expenses();
+                date = expenses.getDate_expenses();
+            }
+
+            startCost = cost;
+            tvCost.setText(String.valueOf(cost));
+            selectedDate = Converter.getCalendar(date);
+            tvSelectedDate.setText(dateFormat.format(date));
+        }
     }
 
     @Override
@@ -130,11 +165,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         accountDAO = new AccountDAOImpl(db);
         account = accountDAO.findAccountById(selectedAccountId);
 
-        if (operationType.equals(getResources().getString(R.string.income))) {
-            addIncome();
-        } else if (operationType.equals(getResources().getString(R.string.expenses))) {
-            addExpenses();
-        }
+        addUpdate();
     }
 
     @Override
@@ -154,6 +185,53 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void addUpdate() {
+        if (operationType.equals(getString(R.string.income))) {
+            if (selectedElementId != -1) updateIncome();
+            else addIncome();
+        } else {
+            if (selectedElementId != -1) updateExpenses();
+            else addExpenses();
+        }
+    }
+
+    private void updateExpenses() {
+        ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
+        Expenses expenses = expensesDAO.findExpensesById(selectedElementId);
+
+
+    }
+
+    private void updateIncome() {
+        btnSpecialAction.setText(getText(R.string.add) + " \"" + account.getName_account() + "\"");
+        btnSpecialAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Float cost = getDigit();
+                if (cost <= 0F) {
+                    Snackbar.make(rootLayout, "Income cannot be 0 or less!", Snackbar.LENGTH_LONG).show();
+                } else {
+
+                    income.setDate_income(Converter.getDate(selectedDate.getTime()));
+                    income.setCost_income(cost);
+                    income.setId_account(selectedAccountId);
+
+                    startCost = income.getCost_income() - startCost;
+
+                    Float balance = account.getBalance() + startCost;
+                    balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
+
+                    account.setBalance(balance);
+                    accountDAO.updateById(account);
+
+                    incomeDAO.updateById(income);
+
+                    IncomeExpensesActivity.this.finish();
+                }
+            }
+        });
     }
 
     private void addExpenses() {

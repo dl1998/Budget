@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.android.budget.Converter;
 import com.android.budget.dao.IncomeDAO;
 import com.android.budget.entity.Income;
 
@@ -31,7 +32,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Income income = new Income();
         income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
-        income.setDate_income(new Date(cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(1)))));
+        income.setDate_income(Converter.getDate(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1)))));
         income.setCost_income(cursor.getFloat(cursor.getColumnIndex(cursor.getColumnName(2))));
         income.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(3))));
 
@@ -126,8 +127,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income getAllByDateForAccount start");
 
-        Long int_date = date.getTime();
-        List<Income> list = get("id_account = ? and date_income = ?", new String[]{String.valueOf(accountId), String.valueOf(int_date)});
+        List<Income> list = get("id_account = ? and date_income = ?", new String[]{String.valueOf(accountId), Converter.getTextDate(date)});
 
         Log.d("myDB", "Income getAllByDateForAccount end");
 
@@ -145,7 +145,7 @@ public class IncomeDAOImpl implements IncomeDAO {
         try {
 
             statement.clearBindings();
-            statement.bindLong(1, income.getDate_income().getTime());
+            statement.bindString(1, Converter.getTextDate(income.getDate_income()));
             statement.bindDouble(2, income.getCost_income());
             statement.bindLong(3, income.getId_account());
             statement.execute();
@@ -186,10 +186,10 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income updateById start");
 
-        Long long_date = income.getDate_income().getTime();
+        String date = Converter.getTextDate(income.getDate_income());
 
         String sql = "UPDATE income SET " +
-                "date_income = " + long_date + ", " +
+                "date_income = \"" + date + "\", " +
                 "cost_income = " + income.getCost_income() + ", " +
                 "id_account = " + income.getId_account() + " " +
                 "WHERE id_income = " + income.getId_income() + ";";

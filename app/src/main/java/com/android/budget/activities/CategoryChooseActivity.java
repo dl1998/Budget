@@ -51,5 +51,13 @@ public class CategoryChooseActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        toolbar.setNavigationIcon(R.mipmap.ic_clear_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoryChooseActivity.this.finish();
+            }
+        });
     }
 }

@@ -12,28 +12,43 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
             android:orientation="vertical">
 
-            <android.support.design.widget.CoordinatorLayout
+            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/gvCircleCategories"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:numColumns="4"
+                android:scrollbars="none" />
 
-                <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/gvCircleCategories"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/tvBalance"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_margin="10dp"
+                    android:layout_weight="5"
+                    android:background="@drawable/rounded_corner"
                     android:gravity="center"
-                    android:numColumns="4"
-                    android:scrollbars="none" />
+                    android:text="Balance: 0"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
 
-                <include layout="@layout/bottom_sheet" />
-
-            </android.support.design.widget.CoordinatorLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

@@ -47,23 +47,20 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private CoordinatorLayout coordinatorLayout;
 
+    {
+        selectedCurrency = null;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_settings);
 
         Integer selectedAccountId = (Integer) getIntent().getExtras().getSerializable("accountId");
-        coordinatorLayout = findViewById(R.id.account_settings_coordinator_layout);
 
-        tvSelectedCurrency = findViewById(R.id.tvSelectedCurrency);
-        etAccountName = findViewById(R.id.etAccountName);
+        initView();
 
-        selectedCurrency = null;
-
-        dbHelper = new DBHelper(this);
-        db = dbHelper.getWritableDatabase();
-        currencyDAO = new CurrencyDAOImpl(db);
-        accountDAO = new AccountDAOImpl(db);
+        initDAO();
 
         initializeData(selectedAccountId);
 
@@ -81,7 +78,22 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     }
 
-    public void initializeData(Integer selectedAccountId){
+    private void initView() {
+
+        coordinatorLayout = findViewById(R.id.account_settings_coordinator_layout);
+        tvSelectedCurrency = findViewById(R.id.tvSelectedCurrency);
+        etAccountName = findViewById(R.id.etAccountName);
+    }
+
+    private void initDAO() {
+
+        dbHelper = new DBHelper(this);
+        db = dbHelper.getWritableDatabase();
+        currencyDAO = new CurrencyDAOImpl(db);
+        accountDAO = new AccountDAOImpl(db);
+    }
+
+    private void initializeData(Integer selectedAccountId) {
         if (selectedAccountId != null) {
             account = accountDAO.findAccountById(selectedAccountId);
             etAccountName.setText(account.getName_account(), TextView.BufferType.EDITABLE);
@@ -144,7 +156,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         listCurrencies.setAdapter(adapter);
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Choose Currency");
+        alert.setTitle(R.string.choose_currency);
         alert.setView(alertLayout);
         alert.setCancelable(true);
 
