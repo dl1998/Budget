@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.budget.Converter;
@@ -49,6 +50,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
     private Mode selectedMode;
 
     private CoordinatorLayout rootLayout;
+    private LinearLayout layoutCost;
 
     private ImageButton btnBackspace;
     private Button btnClear;
@@ -126,6 +128,15 @@ public class IncomeExpensesActivity extends AppCompatActivity {
             }
         });
 
+        layoutCost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initMode();
+                btnSpecialAction.setText(getText(R.string.select_category));
+                showCalculatorFragment();
+            }
+        });
+
         btnSpecialAction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,6 +173,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
 
     private void initView() {
         rootLayout = findViewById(R.id.income_expenses_layout);
+        layoutCost = findViewById(R.id.layoutCost);
         btnBackspace = findViewById(R.id.btnBackspace);
         btnClear = findViewById(R.id.btnClear);
         tvSelectedDate = findViewById(R.id.tvSelectedDate);
