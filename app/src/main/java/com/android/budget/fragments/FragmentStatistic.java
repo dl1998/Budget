@@ -34,7 +34,7 @@ public class FragmentStatistic extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceBundle){
 
-        View view = inflater.inflate(R.layout.statistic_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_statistic, container, false);
 
         Toolbar toolbar;
         if (container != null) {

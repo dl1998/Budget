@@ -15,7 +15,7 @@ import com.android.budget.R;
  * Created by dimal on 19.10.2017.
  */
 
-public class FragmentCalculation extends Fragment implements View.OnClickListener{
+public class FragmentCalculation extends Fragment implements View.OnClickListener {
 
     private StringBuilder stringBuilder;
 
@@ -25,121 +25,109 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
     private Boolean optionButtonPressed = false;
     private String lastOptionButton = null;
 
-    private Button btnNumber0;
-    private Button btnNumber1;
-    private Button btnNumber2;
-    private Button btnNumber3;
-    private Button btnNumber4;
-    private Button btnNumber5;
-    private Button btnNumber6;
-    private Button btnNumber7;
-    private Button btnNumber8;
-    private Button btnNumber9;
+    private Button[] btnNumber;
+    private Button[] btnOperation;
+
     private Button btnAddDot;
-    private Button btnPlus;
-    private Button btnMinus;
-    private Button btnMultiply;
-    private Button btnDivide;
-    private Button btnEquals;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.calculation_fragment, container, false);
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_calculation, container, false);
 
         tvCost = getActivity().findViewById(R.id.tvCost);
 
-        btnNumber0 = view.findViewById(R.id.btnNumber0);
-        btnNumber1 = view.findViewById(R.id.btnNumber1);
-        btnNumber2 = view.findViewById(R.id.btnNumber2);
-        btnNumber3 = view.findViewById(R.id.btnNumber3);
-        btnNumber4 = view.findViewById(R.id.btnNumber4);
-        btnNumber5 = view.findViewById(R.id.btnNumber5);
-        btnNumber6 = view.findViewById(R.id.btnNumber6);
-        btnNumber7 = view.findViewById(R.id.btnNumber7);
-        btnNumber8 = view.findViewById(R.id.btnNumber8);
-        btnNumber9 = view.findViewById(R.id.btnNumber9);
-        btnAddDot = view.findViewById(R.id.btnAddDot);
-        btnPlus = view.findViewById(R.id.btnPlus);
-        btnMinus = view.findViewById(R.id.btnMinus);
-        btnMultiply = view.findViewById(R.id.btnMultiply);
-        btnDivide = view.findViewById(R.id.btnDivide);
-        btnEquals = view.findViewById(R.id.btnEquals);
+        btnNumber = new Button[10];
+        btnOperation = new Button[5];
 
-        btnNumber0.setOnClickListener(this);
-        btnNumber1.setOnClickListener(this);
-        btnNumber2.setOnClickListener(this);
-        btnNumber3.setOnClickListener(this);
-        btnNumber4.setOnClickListener(this);
-        btnNumber5.setOnClickListener(this);
-        btnNumber6.setOnClickListener(this);
-        btnNumber7.setOnClickListener(this);
-        btnNumber8.setOnClickListener(this);
-        btnNumber9.setOnClickListener(this);
+        btnNumber[0] = view.findViewById(R.id.btnNumber0);
+        btnNumber[1] = view.findViewById(R.id.btnNumber1);
+        btnNumber[2] = view.findViewById(R.id.btnNumber2);
+        btnNumber[3] = view.findViewById(R.id.btnNumber3);
+        btnNumber[4] = view.findViewById(R.id.btnNumber4);
+        btnNumber[5] = view.findViewById(R.id.btnNumber5);
+        btnNumber[6] = view.findViewById(R.id.btnNumber6);
+        btnNumber[7] = view.findViewById(R.id.btnNumber7);
+        btnNumber[8] = view.findViewById(R.id.btnNumber8);
+        btnNumber[9] = view.findViewById(R.id.btnNumber9);
+
+        btnOperation[0] = view.findViewById(R.id.btnAdd);
+        btnOperation[1] = view.findViewById(R.id.btnSubstract);
+        btnOperation[2] = view.findViewById(R.id.btnMultiply);
+        btnOperation[3] = view.findViewById(R.id.btnDivide);
+        btnOperation[4] = view.findViewById(R.id.btnEquals);
+
+        btnAddDot = view.findViewById(R.id.btnAddDot);
+
+        for (Button button : btnNumber) {
+            button.setOnClickListener(this);
+        }
+
+        for (Button button : btnOperation) {
+            button.setOnClickListener(this);
+        }
+
         btnAddDot.setOnClickListener(this);
-        btnPlus.setOnClickListener(this);
-        btnMinus.setOnClickListener(this);
-        btnMultiply.setOnClickListener(this);
-        btnDivide.setOnClickListener(this);
-        btnEquals.setOnClickListener(this);
 
         return view;
     }
 
     @Override
-    public void onClick(View view){
+    public void onClick(View view) {
 
-        switch (view.getId()){
-            case R.id.btnPlus:
-            case R.id.btnMinus:
+        String text;
+
+        switch (view.getId()) {
+            case R.id.btnAdd:
+            case R.id.btnSubstract:
             case R.id.btnMultiply:
             case R.id.btnDivide:
-                optionButtonPressed(view);
+                text = tvCost.getText().toString();
+                if (!text.isEmpty()) optionButtonPressed(view);
                 break;
             case R.id.btnEquals:
-                if(lastOptionButton != null) {
+                if (lastOptionButton != null && !optionButtonPressed) {
                     try {
                         doLastOptionButtonAction();
                         displayNumber();
                         number = null;
                         optionButtonPressed = false;
                         lastOptionButton = null;
-                    } catch (ArithmeticException e){
-                        tvCost.setText("");
+                    } catch (ArithmeticException e) {
+                        reset();
                     }
-                    break;
                 }
+                break;
             default:
-                if(optionButtonPressed){
+                if (optionButtonPressed) {
                     tvCost.setText("");
                     optionButtonPressed = false;
                 }
-                stringBuilder = new StringBuilder(tvCost.getText());
-                addText(((Button)view).getText().toString());
+                addText(((Button) view).getText().toString());
                 break;
         }
     }
 
     private void optionButtonPressed(View view) {
-        try {
-            if (!optionButtonPressed) {
+        if (!optionButtonPressed) {
+            try {
                 doLastOptionButtonAction();
-                if (number == null) {
-                    number = Float.parseFloat(tvCost.getText().toString());
-                    tvCost.setText("");
-                } else {
-                    displayNumber();
-                }
+            } catch (ArithmeticException e) {
+                reset();
+                return;
             }
-            lastOptionButton = ((Button) view).getText().toString();
-            optionButtonPressed = true;
-        } catch (NumberFormatException e){
-
+            if (number == null) {
+                number = Float.parseFloat(tvCost.getText().toString());
+            } else {
+                displayNumber();
+            }
         }
+        lastOptionButton = ((Button) view).getText().toString();
+        optionButtonPressed = true;
     }
 
-    private void doLastOptionButtonAction() throws ArithmeticException {
-        if (lastOptionButton != null) {
+    private void doLastOptionButtonAction() {
+        if (lastOptionButton != null && !tvCost.getText().toString().isEmpty()) {
             switch (lastOptionButton) {
                 case "+":
                     number += Float.parseFloat(tvCost.getText().toString());
@@ -151,27 +139,24 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
                     number *= Float.parseFloat(tvCost.getText().toString());
                     break;
                 case "/":
-                    try {
-                        Float divider = Float.parseFloat(tvCost.getText().toString());
-                        if (divider == 0F)throw new ArithmeticException();
-                        number /= Float.parseFloat(tvCost.getText().toString());
-                    } catch (ArithmeticException e){
-                        number = null;
-                        lastOptionButton = null;
-                        optionButtonPressed = false;
-                        throw e;
-                    }
+                    Float divider = Float.parseFloat(tvCost.getText().toString());
+                    if (divider == 0F) throw new ArithmeticException();
+                    number /= Float.parseFloat(tvCost.getText().toString());
                     break;
             }
         }
     }
 
-    /*public Button getSpecialActionButton(){
-        return this.btnSpecialAction;
-    }*/
+    public void reset() {
+        number = null;
+        lastOptionButton = null;
+        optionButtonPressed = false;
+        tvCost.setText("");
+    }
 
     private void displayNumber() {
-        if(String.valueOf(number).matches("^\\d+\\.0{0,2}$")) tvCost.setText(String.valueOf(number.intValue()));
+        if (String.valueOf(number).matches("^\\d+\\.0{0,2}$"))
+            tvCost.setText(String.valueOf(number.intValue()));
         else tvCost.setText(String.valueOf(number));
     }
 
@@ -189,7 +174,8 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
         String regex = "(^0(\\.\\d{0,2})?$)|(^[1-9]\\d{0,6}(\\.\\d{0,2})?$)";
 
         stringBuilder = new StringBuilder(tvCost.getText());
-        if(stringBuilder.toString().isEmpty() && text.equals("."))stringBuilder.append("0");
+
+        if (stringBuilder.toString().isEmpty() && text.equals(".")) stringBuilder.append("0");
         stringBuilder.append(text);
         if (stringBuilder.toString().matches(regex)) tvCost.setText(stringBuilder);
     }

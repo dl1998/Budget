@@ -50,8 +50,8 @@ public class CategoriesAdapter extends BaseAdapter {
 
         View view = convertView;
         if (view == null) {
-            if (circleMode) view = inflater.inflate(R.layout.circle_button_preset, parent, false);
-            else view = inflater.inflate(R.layout.square_button_preset, parent, false);
+            if (circleMode) view = inflater.inflate(R.layout.preset_circle_button, parent, false);
+            else view = inflater.inflate(R.layout.preset_square_button, parent, false);
         }
 
         Category listModel = categories[position];

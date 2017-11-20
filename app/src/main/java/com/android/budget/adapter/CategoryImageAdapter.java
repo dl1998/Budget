@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.android.budget.R;
-import com.android.budget.adapter.model.CategoryImageModel;
 
 /**
  * Created by dl1998 on 30.10.17.
@@ -18,10 +17,10 @@ import com.android.budget.adapter.model.CategoryImageModel;
 
 public class CategoryImageAdapter extends BaseAdapter {
     private final Context context;
-    private final CategoryImageModel[] models;
+    private final Integer[] models;
     private final LayoutInflater inflater;
 
-    public CategoryImageAdapter(Context context, CategoryImageModel[] models) {
+    public CategoryImageAdapter(Context context, Integer[] models) {
         this.context = context;
         this.models = models;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,13 +46,13 @@ public class CategoryImageAdapter extends BaseAdapter {
 
         View view = convertView;
         if (view == null) {
-            view = inflater.inflate(R.layout.category_image_row, parent, false);
+            view = inflater.inflate(R.layout.row_category_image, parent, false);
         }
 
-        CategoryImageModel listModel = models[position];
+        Integer img_src = models[position];
 
         ImageView circleButton = view.findViewById(R.id.cvButton);
-        circleButton.setImageResource(listModel.getImage_src());
+        circleButton.setImageResource(img_src);
         circleButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {

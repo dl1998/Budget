@@ -11,7 +11,6 @@ import android.widget.GridView;
 
 import com.android.budget.R;
 import com.android.budget.adapter.CategoryImageAdapter;
-import com.android.budget.adapter.model.CategoryImageModel;
 
 import java.util.ArrayList;
 
@@ -21,8 +20,6 @@ import java.util.ArrayList;
 
 public class CategoryChooseActivity extends AppCompatActivity {
 
-    private GridView gvImages;
-
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -31,24 +28,24 @@ public class CategoryChooseActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_category_choose);
         setSupportActionBar(toolbar);
 
-        gvImages = findViewById(R.id.gvCategories);
+        GridView gvImages = findViewById(R.id.gvCategories);
 
         TypedArray imgs = getResources().obtainTypedArray(R.array.drawables);
 
-        final ArrayList<CategoryImageModel> listModels = new ArrayList<>();
+        final ArrayList<Integer> listModels = new ArrayList<>();
         for (int i = 0; i < imgs.length(); i++) {
-            listModels.add(new CategoryImageModel(imgs.getResourceId(i, -1)));
+            listModels.add(imgs.getResourceId(i, -1));
         }
 
-        gvImages.setAdapter(new CategoryImageAdapter(this, listModels.toArray(new CategoryImageModel[listModels.size()])));
+        gvImages.setAdapter(new CategoryImageAdapter(this, listModels.toArray(new Integer[listModels.size()])));
 
         gvImages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent();
-                intent.putExtra("selectedImage", listModels.get(i).getImage_src());
+                intent.putExtra("selectedImage", listModels.get(i));
                 setResult(RESULT_OK, intent);
-                finish();
+                CategoryChooseActivity.this.finish();
             }
         });
 

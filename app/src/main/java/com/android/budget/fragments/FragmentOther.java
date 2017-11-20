@@ -21,7 +21,7 @@ public class FragmentOther extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.other_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_other, container, false);
 
         Toolbar toolbar;
         if (container != null) {

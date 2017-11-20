@@ -44,7 +44,7 @@ public class IncomesAdapter extends ArrayAdapter<IncomesModel> {
         final ViewHolder holder;
         if (view == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.child_view, null);
+            view = inflater.inflate(R.layout.row_child_view, null);
 
             holder.cvCost = view.findViewById(R.id.child_view_cost);
             holder.cvDate = view.findViewById(R.id.child_view_date);

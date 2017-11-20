@@ -38,7 +38,7 @@
             android:text="3" />
 
         <Button
-            android:id="@+id/btnPlus"
+            android:id="@+id/btnAdd"
             style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -78,7 +78,7 @@
             android:text="6" />
 
         <Button
-            android:id="@+id/btnMinus"
+            android:id="@+id/btnSubstract"
             style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"

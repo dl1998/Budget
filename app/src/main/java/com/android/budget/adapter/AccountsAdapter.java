@@ -66,7 +66,7 @@ public class AccountsAdapter extends ArrayAdapter<AccountListModel> {
         return accountModelList;
     }
 
-    public void toogleSelection(int position){
+    public void toggleSelection(int position) {
         selectView(position, !mSelectedItemsIds.get(position));
     }
 

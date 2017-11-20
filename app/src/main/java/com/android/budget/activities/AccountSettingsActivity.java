@@ -34,15 +34,12 @@ import java.util.List;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
-    private DBHelper dbHelper;
-    private SQLiteDatabase db;
     private CurrencyDAOImpl currencyDAO;
     private Currency selectedCurrency;
     private AccountDAOImpl accountDAO;
     private Account account;
 
     private TextView tvSelectedCurrency;
-    private MenuItem btnApply;
     private EditText etAccountName;
 
     private CoordinatorLayout coordinatorLayout;
@@ -79,16 +76,14 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     private void initView() {
-
         coordinatorLayout = findViewById(R.id.account_settings_coordinator_layout);
         tvSelectedCurrency = findViewById(R.id.tvSelectedCurrency);
         etAccountName = findViewById(R.id.etAccountName);
     }
 
     private void initDAO() {
-
-        dbHelper = new DBHelper(this);
-        db = dbHelper.getWritableDatabase();
+        DBHelper dbHelper = new DBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         currencyDAO = new CurrencyDAOImpl(db);
         accountDAO = new AccountDAOImpl(db);
     }
@@ -98,18 +93,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
             account = accountDAO.findAccountById(selectedAccountId);
             etAccountName.setText(account.getName_account(), TextView.BufferType.EDITABLE);
             selectedCurrency = currencyDAO.findCurrencyById(account.getId_currency());
-            tvSelectedCurrency.setText(selectedCurrency.getIso_name_currency());
         } else {
             selectedCurrency = currencyDAO.findCurrencyByName("Euro");
-            tvSelectedCurrency.setText(selectedCurrency.getIso_name_currency());
         }
+        tvSelectedCurrency.setText(selectedCurrency.getIso_name_currency());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_apply, menu);
 
-        btnApply = menu.findItem(R.id.btnApply);
+        MenuItem btnApply = menu.findItem(R.id.btnApply);
         btnApply.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -143,7 +137,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     public void openCurrenciesChooser(View view) {
-        View alertLayout = getLayoutInflater().inflate(R.layout.select_currency_alert_dialog, null);
+        View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_select_currency, null);
         final ListView listCurrencies = alertLayout.findViewById(R.id.listCurrencies);
 
         List<Currency> currenciesList = currencyDAO.getAll();

@@ -58,7 +58,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnMinus"
+                android:id="@+id/btnSubstract"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -67,7 +67,7 @@
                 android:src="@drawable/minus_red" />
 
             <ImageButton
-                android:id="@+id/btnPlus"
+                android:id="@+id/btnAdd"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

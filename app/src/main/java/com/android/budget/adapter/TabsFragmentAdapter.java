@@ -5,13 +5,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.SparseArray;
 
 import com.android.budget.fragments.AbstractTabFragment;
 import com.android.budget.fragments.FragmentExpensesList;
 import com.android.budget.fragments.FragmentIncomesList;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by dl1998 on 05.11.17.
@@ -19,7 +17,7 @@ import java.util.Map;
 
 public class TabsFragmentAdapter extends FragmentPagerAdapter {
 
-    private Map<Integer, AbstractTabFragment> tabs;
+    private SparseArray<AbstractTabFragment> tabs;
     private Context context;
 
     public TabsFragmentAdapter(FragmentManager fm, Context context) {
@@ -45,7 +43,7 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
     }
 
     private void initTabsMap() {
-        tabs = new HashMap<>();
+        tabs = new SparseArray<>();
         tabs.put(0, FragmentIncomesList.getInstance(context));
         tabs.put(1, FragmentExpensesList.getInstance(context));
     }

@@ -26,12 +26,6 @@ public class AccountListModel {
         this.currency = currencyDAO.findCurrencyById(account.getId_currency()).getIso_name_currency();
     }
 
-    public AccountListModel(String name, Float balance, String currency) {
-        this.name = name;
-        this.balance = balance;
-        this.currency = currency;
-    }
-
     public String getName() {
         return name;
     }

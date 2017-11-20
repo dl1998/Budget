@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by dl1998 on 04.11.17.
@@ -47,6 +48,11 @@ public class Converter {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         return calendar;
+    }
+
+    public static String getTextDate(Calendar calendar) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMMM", new Locale("pl", "PL"));
+        return dateFormat.format(calendar.getTime());
     }
 
 }

@@ -60,7 +60,7 @@ public class FragmentIncomesList extends AbstractTabFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.income_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_income, container, false);
 
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
 
@@ -112,7 +112,7 @@ public class FragmentIncomesList extends AbstractTabFragment {
 
     private void loadIncomesInList() {
         Date date = new Date(System.currentTimeMillis());
-        final IncomesAdapter adapter = new IncomesAdapter(getActivity(), R.layout.child_view, getIncomesModels(Converter.getDate(date)));
+        final IncomesAdapter adapter = new IncomesAdapter(getActivity(), R.layout.row_child_view, getIncomesModels(Converter.getDate(date)));
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         listView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {

@@ -15,16 +15,13 @@ import com.android.budget.adapter.TabsFragmentAdapter;
 
 public class IncomeExpensesInfoActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
-    private TabsFragmentAdapter adapter;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.income_expenses_info);
+        setContentView(R.layout.activity_income_expenses_info);
 
-        viewPager = findViewById(R.id.viewPager);
-        adapter = new TabsFragmentAdapter(getSupportFragmentManager(), this);
+        ViewPager viewPager = findViewById(R.id.viewPager);
+        TabsFragmentAdapter adapter = new TabsFragmentAdapter(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);

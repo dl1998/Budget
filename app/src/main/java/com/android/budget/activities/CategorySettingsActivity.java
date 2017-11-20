@@ -30,8 +30,6 @@ public class CategorySettingsActivity extends AppCompatActivity {
     private EditText etCategoryName;
     private CoordinatorLayout coordinatorLayout;
 
-    private DBHelper dbHelper;
-    private SQLiteDatabase db;
     private CategoryDAOImpl categoryDAO;
     private Category category;
 
@@ -40,18 +38,13 @@ public class CategorySettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_settings);
 
-        Integer selectedCategoryId = (Integer) getIntent().getExtras().getSerializable("categoryId");
-
-        dbHelper = new DBHelper(this);
-        db = dbHelper.getWritableDatabase();
-        categoryDAO = new CategoryDAOImpl(db);
+        initDAO();
 
         Toolbar toolbar = findViewById(R.id.toolbar_category);
         setSupportActionBar(toolbar);
 
-        coordinatorLayout = findViewById(R.id.coordinatorLayout);
-        etCategoryName = findViewById(R.id.etCategoryName);
-        fab = findViewById(R.id.btnSelectedCategoryImage);
+        initViews();
+
         fab.setImageResource(R.drawable.coin);
         fab.setTag(fab.getId(), R.drawable.coin);
 
@@ -63,7 +56,7 @@ public class CategorySettingsActivity extends AppCompatActivity {
             }
         });
 
-        initializeData(selectedCategoryId);
+        initData();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,14 +68,29 @@ public class CategorySettingsActivity extends AppCompatActivity {
     }
 
     /**
-     * Open the category image selection activity
+     * Open category image selection activity
      */
-    public void openCategoryChooser() {
+    private void openCategoryChooser() {
         Intent intent = new Intent(this, CategoryChooseActivity.class);
         startActivityForResult(intent, 1);
     }
 
-    public void initializeData(Integer selectedCategoryId){
+    private void initViews() {
+        coordinatorLayout = findViewById(R.id.coordinatorLayout);
+        etCategoryName = findViewById(R.id.etCategoryName);
+        fab = findViewById(R.id.btnSelectedCategoryImage);
+    }
+
+    private void initDAO() {
+        DBHelper dbHelper = new DBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        categoryDAO = new CategoryDAOImpl(db);
+    }
+
+    private void initData() {
+
+        Integer selectedCategoryId = (Integer) getIntent().getExtras().getSerializable("categoryId");
+
         if(selectedCategoryId == null){
             category = new Category();
             category.setSrc_image((Integer) fab.getTag(fab.getId()));

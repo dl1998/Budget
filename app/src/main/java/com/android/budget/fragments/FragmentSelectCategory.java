@@ -32,7 +32,6 @@ import java.util.ArrayList;
 
 public class FragmentSelectCategory extends Fragment {
 
-    private DBHelper dbHelper;
     private SQLiteDatabase db;
     private CategoryDAOImpl categoryDAO;
 
@@ -43,13 +42,13 @@ public class FragmentSelectCategory extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.select_category_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_category, container, false);
 
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
 
         gvSquareCategories = view.findViewById(R.id.gvSquareCategories);
 
-        dbHelper = new DBHelper(getActivity());
+        DBHelper dbHelper = new DBHelper(getActivity());
         db = dbHelper.getWritableDatabase();
         categoryDAO = new CategoryDAOImpl(db);
 
@@ -58,29 +57,32 @@ public class FragmentSelectCategory extends Fragment {
         gvSquareCategories.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CategoriesAdapter adapter = (CategoriesAdapter) parent.getAdapter();
-                Category model = (Category) adapter.getItem(position);
+                if (cost > 0) {
+                    CategoriesAdapter adapter = (CategoriesAdapter) parent.getAdapter();
+                    Category model = (Category) adapter.getItem(position);
 
-                AccountDAOImpl accountDAO = new AccountDAOImpl(db);
-                Account account = accountDAO.findAccountById(selectedAccountId);
+                    AccountDAOImpl accountDAO = new AccountDAOImpl(db);
+                    Account account = accountDAO.findAccountById(selectedAccountId);
 
-                ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
-                Expenses expenses = new Expenses();
+                    ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
+                    Expenses expenses = new Expenses();
 
-                expenses.setCost_expenses(cost);
-                IncomeExpensesActivity incomeExpensesActivity = (IncomeExpensesActivity) getActivity();
-                expenses.setDate_expenses(incomeExpensesActivity.getDate());
-                expenses.setId_category(model.getId_category());
+                    IncomeExpensesActivity incomeExpensesActivity = (IncomeExpensesActivity) getActivity();
 
-                expensesDAO.add(expenses);
+                    expenses.setCost_expenses(cost);
+                    expenses.setDate_expenses(incomeExpensesActivity.getDate());
+                    expenses.setId_category(model.getId_category());
 
-                Float balance = account.getBalance() - expenses.getCost_expenses();
-                balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
+                    expensesDAO.add(expenses);
 
-                account.setBalance(balance);
-                accountDAO.updateById(account);
+                    Float balance = account.getBalance() - expenses.getCost_expenses();
+                    balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
 
-                incomeExpensesActivity.finish();
+                    account.setBalance(balance);
+                    accountDAO.updateById(account);
+
+                    incomeExpensesActivity.finish();
+                }
             }
         });
 

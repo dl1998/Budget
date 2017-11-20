@@ -46,13 +46,16 @@ import java.util.Locale;
 
 public class IncomeExpensesActivity extends AppCompatActivity {
 
+    private Mode selectedMode;
+
     private CoordinatorLayout rootLayout;
+
     private ImageButton btnBackspace;
+    private Button btnClear;
     private TextView tvSelectedDate;
     private TextView tvCost;
     private Button btnSpecialAction;
 
-    private SimpleDateFormat dateFormat;
     private Calendar selectedDate;
     private String operationType;
     private Integer selectedAccountId;
@@ -60,7 +63,6 @@ public class IncomeExpensesActivity extends AppCompatActivity {
     private Integer selectedElementId;
     private Float startCost;
 
-    private DBHelper dbHelper;
     private SQLiteDatabase db;
 
     private Account account;
@@ -82,25 +84,16 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_income_expenses);
 
-        rootLayout = findViewById(R.id.income_expenses_layout);
-        btnBackspace = findViewById(R.id.btnBackspace);
-        tvSelectedDate = findViewById(R.id.tvSelectedDate);
-        tvCost = findViewById(R.id.tvCost);
-        btnSpecialAction = findViewById(R.id.btnSpecialAction);
-
-        operationType = getIntent().getExtras().getString("operationType");
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
-        selectedCategoryId = getIntent().getIntExtra("categoryId", -1);
-        selectedElementId = getIntent().getIntExtra("elementId", -1);
+        initFromExtras();
 
-        dbHelper = new DBHelper(this);
+        initView();
+
+        DBHelper dbHelper = new DBHelper(this);
         db = dbHelper.getWritableDatabase();
 
         fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentCalculation = new FragmentCalculation();
-        fragmentTransaction.replace(R.id.income_expenses_fragment, fragmentCalculation);
-        fragmentTransaction.commit();
+        showCalculatorFragment();
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         toolbar.setTitle(operationType);
@@ -114,9 +107,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
             }
         });
 
-        getResources().getConfiguration().setLocale(new Locale("pl", "PL"));
         selectedDate = Calendar.getInstance();
-        dateFormat = new SimpleDateFormat("EEEE, d MMMM", new Locale("pl", "PL"));
 
         btnBackspace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,15 +117,93 @@ public class IncomeExpensesActivity extends AppCompatActivity {
             }
         });
 
-        tvSelectedDate.setText(dateFormat.format(selectedDate.getTime()) + "");
+        btnClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (fragmentCalculation != null) {
+                    fragmentCalculation.reset();
+                }
+            }
+        });
+
+        btnSpecialAction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Float cost = getDigit();
+                if (cost <= 0F) {
+                    Snackbar.make(rootLayout, operationType + " " + getString(R.string.cost_incorrect_info), Snackbar.LENGTH_LONG).show();
+                } else {
+                    switch (selectedMode) {
+                        case INCOME_ADD:
+                            addIncome();
+                            break;
+                        case EXPENSES_ADD:
+                            addExpenses();
+                            break;
+                        case INCOME_UPDATE:
+                            updateIncome();
+                            break;
+                        case EXPENSES_UPDATE:
+                            updateExpenses();
+                            break;
+                        case CATEGORY_ADD:
+                            addCategory();
+                            break;
+                    }
+                }
+            }
+        });
+
+        tvSelectedDate.setText(Converter.getTextDate(selectedDate));
 
         initData();
+        initMode();
+    }
+
+    private void initView() {
+        rootLayout = findViewById(R.id.income_expenses_layout);
+        btnBackspace = findViewById(R.id.btnBackspace);
+        btnClear = findViewById(R.id.btnClear);
+        tvSelectedDate = findViewById(R.id.tvSelectedDate);
+        tvCost = findViewById(R.id.tvCost);
+        btnSpecialAction = findViewById(R.id.btnSpecialAction);
+    }
+
+    private void initFromExtras() {
+        operationType = getIntent().getStringExtra("operationType");
+        selectedCategoryId = getIntent().getIntExtra("categoryId", -1);
+        selectedElementId = getIntent().getIntExtra("elementId", -1);
+    }
+
+    private void initMode() {
+        if (operationType.equals(getString(R.string.income))) {
+            btnSpecialAction.setText(getText(R.string.add) + " \"" + account.getName_account() + "\"");
+            if (selectedElementId != -1) selectedMode = Mode.INCOME_UPDATE;
+            else selectedMode = Mode.INCOME_ADD;
+        } else {
+            categoryDAO = new CategoryDAOImpl(db);
+            if (selectedCategoryId != -1) {
+                category = categoryDAO.findCategoryById(selectedCategoryId);
+                btnSpecialAction.setText(getString(R.string.add) + " \"" + category.getName_category() + "\"");
+            }
+            if (selectedElementId != -1) selectedMode = Mode.EXPENSES_UPDATE;
+            else selectedMode = Mode.EXPENSES_ADD;
+        }
+    }
+
+    private void showCalculatorFragment() {
+        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentCalculation = new FragmentCalculation();
+        fragmentTransaction.replace(R.id.income_expenses_fragment, fragmentCalculation);
+        fragmentTransaction.commit();
     }
 
     public void initData() {
-
         Float cost;
         Date date;
+
+        accountDAO = new AccountDAOImpl(db);
+        account = accountDAO.findAccountById(selectedAccountId);
 
         if (selectedElementId != -1) {
             if (operationType.equals(getString(R.string.income))) {
@@ -151,21 +220,13 @@ public class IncomeExpensesActivity extends AppCompatActivity {
                 date = expenses.getDate_expenses();
             }
 
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMMM", new Locale("pl", "PL"));
+
             startCost = cost;
             tvCost.setText(String.valueOf(cost));
             selectedDate = Converter.getCalendar(date);
             tvSelectedDate.setText(dateFormat.format(date));
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        accountDAO = new AccountDAOImpl(db);
-        account = accountDAO.findAccountById(selectedAccountId);
-
-        addUpdate();
     }
 
     @Override
@@ -177,7 +238,6 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         btnDateChoose.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-
                 openAlertDialogDatePicker();
 
                 return true;
@@ -187,153 +247,100 @@ public class IncomeExpensesActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void addUpdate() {
-        if (operationType.equals(getString(R.string.income))) {
-            if (selectedElementId != -1) updateIncome();
-            else addIncome();
-        } else {
-            if (selectedElementId != -1) updateExpenses();
-            else addExpenses();
-        }
+    private void updateAccountBalance() {
+        Float balance = account.getBalance() + startCost;
+        balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
+
+        account.setBalance(balance);
+        accountDAO.updateById(account);
     }
 
     private void updateExpenses() {
-        ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
-        Expenses expenses = expensesDAO.findExpensesById(selectedElementId);
+        expenses.setDate_expenses(getDate());
+        expenses.setCost_expenses(getDigit());
 
+        startCost = expenses.getCost_expenses() - startCost;
 
+        updateAccountBalance();
+
+        expensesDAO.updateById(expenses);
+
+        IncomeExpensesActivity.this.finish();
     }
 
     private void updateIncome() {
-        btnSpecialAction.setText(getText(R.string.add) + " \"" + account.getName_account() + "\"");
-        btnSpecialAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Float cost = getDigit();
-                if (cost <= 0F) {
-                    Snackbar.make(rootLayout, "Income cannot be 0 or less!", Snackbar.LENGTH_LONG).show();
-                } else {
+        income.setDate_income(getDate());
+        income.setCost_income(getDigit());
 
-                    income.setDate_income(Converter.getDate(selectedDate.getTime()));
-                    income.setCost_income(cost);
-                    income.setId_account(selectedAccountId);
+        startCost = income.getCost_income() - startCost;
 
-                    startCost = income.getCost_income() - startCost;
+        updateAccountBalance();
 
-                    Float balance = account.getBalance() + startCost;
-                    balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
+        incomeDAO.updateById(income);
 
-                    account.setBalance(balance);
-                    accountDAO.updateById(account);
+        IncomeExpensesActivity.this.finish();
 
-                    incomeDAO.updateById(income);
-
-                    IncomeExpensesActivity.this.finish();
-                }
-            }
-        });
     }
 
     private void addExpenses() {
 
-        categoryDAO = new CategoryDAOImpl(db);
-
         if (selectedCategoryId != -1) {
-            category = categoryDAO.findCategoryById(selectedCategoryId);
 
-            btnSpecialAction.setText(getString(R.string.add) + " \"" + category.getName_category() + "\"");
-            btnSpecialAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    final Float cost = getDigit();
-                    if (cost <= 0F) {
-                        Snackbar.make(rootLayout, "Expenses cannot be 0 or less!", Snackbar.LENGTH_LONG).show();
-                    } else {
+            Expenses expenses = new Expenses();
+            expenses.setDate_expenses(new Date(selectedDate.getTimeInMillis()));
+            expenses.setCost_expenses(getDigit());
+            expenses.setId_category(selectedCategoryId);
 
-                        Expenses expenses = new Expenses();
-                        expenses.setDate_expenses(new Date(selectedDate.getTimeInMillis()));
-                        expenses.setCost_expenses(cost);
-                        expenses.setId_category(selectedCategoryId);
+            Float balance = account.getBalance() - expenses.getCost_expenses();
+            balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
 
-                        Float balance = account.getBalance() - expenses.getCost_expenses();
-                        balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
+            account.setBalance(balance);
+            accountDAO.updateById(account);
 
-                        account.setBalance(balance);
-                        accountDAO.updateById(account);
+            ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
+            expensesDAO.add(expenses);
 
-                        ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
-                        expensesDAO.add(expenses);
+            IncomeExpensesActivity.this.finish();
 
-                        IncomeExpensesActivity.this.finish();
-                    }
-                }
-            });
         } else {
-            btnSpecialAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
 
-                    final Float cost = getDigit();
+            Bundle bundle = new Bundle();
+            bundle.putFloat("cost", getDigit());
 
-                    if (cost <= 0F) {
-                        Snackbar.make(rootLayout, "Expenses cannot be 0 or less!", Snackbar.LENGTH_LONG).show();
-                    } else {
-                        fragmentManager = getSupportFragmentManager();
-                        fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentSelectCategory = new FragmentSelectCategory();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentSelectCategory = new FragmentSelectCategory();
+            fragmentSelectCategory.setArguments(bundle);
+            fragmentTransaction.replace(R.id.income_expenses_fragment, fragmentSelectCategory);
+            fragmentTransaction.commit();
 
-                        Bundle bundle = new Bundle();
-                        bundle.putFloat("cost", cost);
-
-                        fragmentSelectCategory.setArguments(bundle);
-                        fragmentTransaction.replace(R.id.income_expenses_fragment, fragmentSelectCategory);
-                        fragmentTransaction.commit();
-
-                        btnSpecialAction.setText(R.string.add_category);
-
-                        btnSpecialAction.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent intent = new Intent(IncomeExpensesActivity.this, CategorySettingsActivity.class);
-                                Integer id = null;
-                                intent.putExtra("categoryId", id);
-                                startActivity(intent);
-                            }
-                        });
-                    }
-                }
-            });
+            btnSpecialAction.setText(R.string.add_category);
+            selectedMode = Mode.CATEGORY_ADD;
         }
     }
 
     private void addIncome() {
-        btnSpecialAction.setText(getText(R.string.add) + " \"" + account.getName_account() + "\"");
-        btnSpecialAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Float cost = getDigit();
-                if (cost <= 0F) {
-                    Snackbar.make(rootLayout, "Income cannot be 0 or less!", Snackbar.LENGTH_LONG).show();
-                } else {
+        income = new Income();
+        income.setDate_income(new Date(selectedDate.getTimeInMillis()));
+        income.setCost_income(getDigit());
+        income.setId_account(selectedAccountId);
 
-                    income = new Income();
-                    income.setDate_income(new Date(selectedDate.getTimeInMillis()));
-                    income.setCost_income(cost);
-                    income.setId_account(selectedAccountId);
+        Float balance = account.getBalance() + income.getCost_income();
+        balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
 
-                    Float balance = account.getBalance() + income.getCost_income();
-                    balance = new BigDecimal(balance).setScale(2, RoundingMode.CEILING).floatValue();
+        account.setBalance(balance);
+        accountDAO.updateById(account);
 
-                    account.setBalance(balance);
-                    accountDAO.updateById(account);
+        incomeDAO = new IncomeDAOImpl(db);
+        incomeDAO.add(income);
 
-                    incomeDAO = new IncomeDAOImpl(db);
-                    incomeDAO.add(income);
+        IncomeExpensesActivity.this.finish();
+    }
 
-                    IncomeExpensesActivity.this.finish();
-                }
-            }
-        });
+    private void addCategory() {
+        Intent intent = new Intent(IncomeExpensesActivity.this, CategorySettingsActivity.class);
+        Integer id = null;
+        intent.putExtra("categoryId", id);
+        startActivity(intent);
     }
 
     public Float getDigit() {
@@ -347,7 +354,7 @@ public class IncomeExpensesActivity extends AppCompatActivity {
     }
 
     private void openAlertDialogDatePicker() {
-        View alertLayout = getLayoutInflater().inflate(R.layout.date_choose_alert_dialog, null);
+        View alertLayout = getLayoutInflater().inflate(R.layout.alert_dialog_date_choose, null);
 
         DatePicker datePicker = alertLayout.findViewById(R.id.datePicker);
 
@@ -363,15 +370,17 @@ public class IncomeExpensesActivity extends AppCompatActivity {
                     @Override
                     public void onDateChanged(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
-
                         selectedDate.set(Calendar.YEAR, year);
                         selectedDate.set(Calendar.MONTH, monthOfYear);
                         selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                        tvSelectedDate.setText(dateFormat.format(selectedDate.getTime()) + "");
+                        tvSelectedDate.setText(Converter.getTextDate(selectedDate));
                         dialog.dismiss();
-
                     }
                 });
+    }
+
+    private enum Mode {
+        INCOME_ADD, EXPENSES_ADD, INCOME_UPDATE, EXPENSES_UPDATE, CATEGORY_ADD
     }
 }

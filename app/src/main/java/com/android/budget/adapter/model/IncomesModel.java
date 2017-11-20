@@ -16,7 +16,7 @@ public class IncomesModel {
     private String currency;
     private Integer id_account;
 
-    public IncomesModel() {
+    private IncomesModel() {
     }
 
     public IncomesModel(Income income, String currency, Integer id_account) {

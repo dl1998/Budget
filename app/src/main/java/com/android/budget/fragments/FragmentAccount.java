@@ -60,7 +60,7 @@ public class FragmentAccount extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable final Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.account_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_account, container, false);
 
         Toolbar toolbar;
         if (container != null) {
@@ -149,7 +149,7 @@ public class FragmentAccount extends Fragment {
                                                   int position, long id, boolean checked) {
                 final int checkedCount = lvAccount.getCheckedItemCount();
                 mode.setTitle(checkedCount + " Selected");
-                accountsAdapter.toogleSelection(position);
+                accountsAdapter.toggleSelection(position);
                 mode.invalidate();
             }
 

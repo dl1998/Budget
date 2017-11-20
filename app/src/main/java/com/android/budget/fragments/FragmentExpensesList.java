@@ -51,7 +51,7 @@ public class FragmentExpensesList extends AbstractTabFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.expenses_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_expenses, container, false);
 
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
 

@@ -68,7 +68,7 @@ public class ExpensesAdapter extends BaseExpandableListAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.group_view, null);
+            convertView = inflater.inflate(R.layout.row_group_view, null);
         }
 
         if (isExpanded) {
@@ -105,7 +105,7 @@ public class ExpensesAdapter extends BaseExpandableListAdapter {
 
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.child_view, null);
+            convertView = inflater.inflate(R.layout.row_child_view, null);
         }
 
         TextView cvExpensesCost = convertView.findViewById(R.id.child_view_cost);

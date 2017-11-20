@@ -17,7 +17,6 @@ public class Expenses {
     }
 
     public Expenses(Integer id_expenses, Date date_expenses, Float cost_expenses, Integer id_category) {
-
         this.id_expenses = id_expenses;
         this.date_expenses = date_expenses;
         this.cost_expenses = cost_expenses;

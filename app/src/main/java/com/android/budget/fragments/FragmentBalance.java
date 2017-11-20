@@ -3,6 +3,7 @@ package com.android.budget.fragments;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -51,9 +52,9 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.balance_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_balance, container, false);
 
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
 
@@ -62,15 +63,15 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
             contentView.setEnabled(false);
             contentView.setVisibility(View.INVISIBLE);
             CoordinatorLayout rootView = view.findViewById(R.id.balance_Root_View);
-            inflater.inflate(R.layout.not_selected_account_fragment, rootView);
+            inflater.inflate(R.layout.fragment_not_selected_account, rootView);
         }
 
         dbHelper = new DBHelper(getActivity());
         db = dbHelper.getWritableDatabase();
         categoryDAO = new CategoryDAOImpl(db);
 
-        btnPlus = view.findViewById(R.id.btnPlus);
-        btnMinus = view.findViewById(R.id.btnMinus);
+        btnPlus = view.findViewById(R.id.btnAdd);
+        btnMinus = view.findViewById(R.id.btnSubstract);
         gridViewCategories = view.findViewById(R.id.gvCircleCategories);
         btnBalance = view.findViewById(R.id.tvBalance);
 
@@ -175,10 +176,10 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     public void onClick(View view){
 
         switch (view.getId()){
-            case R.id.btnMinus:
+            case R.id.btnSubstract:
                 openIncomeExpensesWindow(null, getString(R.string.expenses));
                 break;
-            case R.id.btnPlus:
+            case R.id.btnAdd:
                 openIncomeExpensesWindow(null, getString(R.string.income));
                 break;
         }
