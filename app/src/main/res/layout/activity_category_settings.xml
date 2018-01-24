@@ -41,6 +41,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorAccent"
         android:clickable="true"
+        android:focusable="true"
         android:src="@drawable/coin"
         app:layout_anchor="@id/toolbar_layout_category"
         app:layout_anchorGravity="bottom|end" />

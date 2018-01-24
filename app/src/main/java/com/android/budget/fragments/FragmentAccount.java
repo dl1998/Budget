@@ -98,8 +98,8 @@ public class FragmentAccount extends Fragment {
                 SharedPreferences.Editor editor = MainActivity.preferences.edit();
                 editor.putInt("selectedAccount", model.getId());
                 editor.apply();
-                tvAccountSelected.setText("Account Selected: " + model.getName() + " (" +
-                        model.getCurrency() + ")");
+                MainActivity rootActivity = (MainActivity) getActivity();
+                rootActivity.showBalanceFragment();
             }
         });
 

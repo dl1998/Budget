@@ -52,7 +52,7 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
         btnNumber[9] = view.findViewById(R.id.btnNumber9);
 
         btnOperation[0] = view.findViewById(R.id.btnAdd);
-        btnOperation[1] = view.findViewById(R.id.btnSubstract);
+        btnOperation[1] = view.findViewById(R.id.btnSubtract);
         btnOperation[2] = view.findViewById(R.id.btnMultiply);
         btnOperation[3] = view.findViewById(R.id.btnDivide);
         btnOperation[4] = view.findViewById(R.id.btnEquals);
@@ -79,7 +79,7 @@ public class FragmentCalculation extends Fragment implements View.OnClickListene
 
         switch (view.getId()) {
             case R.id.btnAdd:
-            case R.id.btnSubstract:
+            case R.id.btnSubtract:
             case R.id.btnMultiply:
             case R.id.btnDivide:
                 text = tvCost.getText().toString();

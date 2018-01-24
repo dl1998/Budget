@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     public static SharedPreferences preferences;
 
+    private BottomNavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,37 +33,26 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         preferences = getSharedPreferences("mySettings", Context.MODE_PRIVATE);
 
-        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
-        navigationView.setSelected(true);
-        navigationView.setSelectedItemId(0);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new FragmentAccount()).commit();
+        navigationView = findViewById(R.id.bottom_navigation);
 
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
                 switch (item.getItemId()) {
                     case R.id.account:
-                        FragmentAccount fragmentAccount = new FragmentAccount();
-                        fragmentTransaction.replace(R.id.fragment, fragmentAccount);
+                        showFragment(new FragmentAccount());
                         break;
                     case R.id.balance:
-                        FragmentBalance fragmentBalance = new FragmentBalance();
-                        fragmentTransaction.replace(R.id.fragment, fragmentBalance);
+                        showFragment(new FragmentBalance());
                         break;
                     case R.id.statistic:
-                        FragmentStatistic fragmentStatistic = new FragmentStatistic();
-                        fragmentTransaction.replace(R.id.fragment, fragmentStatistic);
+                        showFragment(new FragmentStatistic());
                         break;
                     case R.id.other:
-                        FragmentOther fragmentOther = new FragmentOther();
-                        fragmentTransaction.replace(R.id.fragment, fragmentOther);
+                        showFragment(new FragmentOther());
                         break;
                 }
-
-                fragmentTransaction.commit();
 
                 return true;
             }
@@ -68,5 +60,36 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.hide();
+
+        showAccountFragment();
+
+        navigationView.setOnNavigationItemReselectedListener(new BottomNavigationView.OnNavigationItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+
+            }
+        });
+    }
+
+    private void showFragment(Fragment fragment) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void showAccountFragment() {
+        navigationView.setSelectedItemId(R.id.account);
+    }
+
+    public void showBalanceFragment() {
+        navigationView.setSelectedItemId(R.id.balance);
+    }
+
+    public void showStatisticFragment() {
+        navigationView.setSelectedItemId(R.id.statistic);
+    }
+
+    public void showOtherFragment() {
+        navigationView.setSelectedItemId(R.id.other);
     }
 }

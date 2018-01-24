@@ -48,4 +48,8 @@ public class TabsFragmentAdapter extends FragmentPagerAdapter {
         tabs.put(1, FragmentExpensesList.getInstance(context));
     }
 
+    public AbstractTabFragment getFragment(int position) {
+        return tabs.get(position);
+    }
+
 }
