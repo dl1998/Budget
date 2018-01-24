@@ -78,7 +78,7 @@
             android:text="6" />
 
         <Button
-            android:id="@+id/btnSubstract"
+            android:id="@+id/btnSubtract"
             style="@style/CalculationButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"

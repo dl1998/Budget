@@ -17,7 +17,7 @@ public class Converter {
     public static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Date getDate(String dateText) {
-        Log.d("myDB", "String date: " + dateText);
+        Log.d("myDB", "String selectedDate: " + dateText);
         java.util.Date tempDate = null;
         try {
             tempDate = simpleDateFormat.parse(dateText);

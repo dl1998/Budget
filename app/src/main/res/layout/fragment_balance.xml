@@ -6,59 +6,45 @@
     android:layout_marginBottom="7dp"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/balance_Fragment_Content_View"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="8">
 
-        <LinearLayout
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/gvCircleCategories"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4"
-            android:orientation="vertical">
+            android:layout_margin="10dp"
+            android:layout_weight="5"
+            android:gravity="center"
+            android:numColumns="4"
+            android:scrollbars="none" />
 
-            <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/gvCircleCategories"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:numColumns="4"
-                android:scrollbars="none" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/tvBalance"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:layout_weight="5"
-                    android:background="@drawable/rounded_corner"
-                    android:gravity="center"
-                    android:text="Balance: 0"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
+        <Button
+            android:id="@+id/tvBalance"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="10dp"
             android:layout_weight="1"
+            android:background="@drawable/rounded_corner"
+            android:gravity="center"
+            android:text="@string/balance"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/btnSubstract"
+                android:id="@+id/btnSubtract"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -76,6 +62,5 @@
                 android:src="@drawable/plus_green" />
         </LinearLayout>
     </LinearLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>

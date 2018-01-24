@@ -1,5 +1,7 @@
 package com.android.budget.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -28,7 +30,10 @@ import com.android.budget.activities.MainActivity;
 import com.android.budget.adapter.CategoriesAdapter;
 import com.android.budget.dao.impl.AccountDAOImpl;
 import com.android.budget.dao.impl.CategoryDAOImpl;
+import com.android.budget.dao.impl.ExpensesDAOImpl;
+import com.android.budget.entity.Account;
 import com.android.budget.entity.Category;
+import com.android.budget.entity.Expenses;
 
 import java.util.ArrayList;
 
@@ -71,7 +76,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         categoryDAO = new CategoryDAOImpl(db);
 
         btnPlus = view.findViewById(R.id.btnAdd);
-        btnMinus = view.findViewById(R.id.btnSubstract);
+        btnMinus = view.findViewById(R.id.btnSubtract);
         gridViewCategories = view.findViewById(R.id.gvCircleCategories);
         btnBalance = view.findViewById(R.id.tvBalance);
 
@@ -109,6 +114,19 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
             }
         });
 
+        gridViewCategories.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+                CategoriesAdapter adapter = (CategoriesAdapter) adapterView.getAdapter();
+
+                if (position == (adapter.getCount() - 1)) return false;
+
+                Category category = (Category) adapter.getItem(position);
+                openModeDialog(category);
+                return true;
+            }
+        });
+
         FloatingActionButton fab = getActivity().findViewById(R.id.fab);
         fab.hide();
 
@@ -119,16 +137,16 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     public void onResume(){
         super.onResume();
         if (selectedAccountId != -1) {
-            loadListOfCurrencies();
+            loadListOfCategories();
             AccountDAOImpl accountDAO = new AccountDAOImpl(db);
             btnBalance.setText(getString(R.string.balance) + ": " + accountDAO.findAccountById(selectedAccountId).getBalance());
         }
     }
 
-    public void openCategorySettingWindow(Integer id){
+    public void openCategorySettingWindow(Integer categoryId) {
         Intent intent = new Intent(getActivity(), CategorySettingsActivity.class);
 
-        intent.putExtra("categoryId", id);
+        intent.putExtra("categoryId", categoryId);
         startActivity(intent);
     }
 
@@ -140,10 +158,48 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
         startActivity(intent);
     }
 
+    private void openModeDialog(final Category category) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(category.getName_category());
+        builder.setPositiveButton(R.string.edit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                openCategorySettingWindow(category.getId_category());
+            }
+        });
+        builder.setNegativeButton(R.string.remove, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                removeCategory(category);
+                loadListOfCategories();
+                AccountDAOImpl accountDAO = new AccountDAOImpl(db);
+                btnBalance.setText(getString(R.string.balance) + ": " + accountDAO.findAccountById(selectedAccountId).getBalance());
+            }
+        });
+
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void removeCategory(Category category) {
+        ExpensesDAOImpl expensesDAO = new ExpensesDAOImpl(db);
+        ArrayList<Expenses> expensesList = new ArrayList<>(expensesDAO.getAllByCategory(category.getId_category()));
+        AccountDAOImpl accountDAO = new AccountDAOImpl(db);
+        Account account = accountDAO.findAccountById(selectedAccountId);
+        Float cost = 0F;
+        for (Expenses expenses : expensesList) {
+            cost += expenses.getCost_expenses();
+            expensesDAO.removeById(expenses.getId_expenses());
+        }
+        account.setBalance(account.getBalance() + cost);
+        accountDAO.updateById(account);
+        categoryDAO.removeById(category.getId_category());
+    }
+
     /**
-     * Load all currencies from selected account and add it in list
+     * Load all categories from selected account and add it in list
      */
-    private void loadListOfCurrencies(){
+    private void loadListOfCategories() {
         ArrayList<Category> categories = new ArrayList<>(categoryDAO.getAllByAccount(selectedAccountId));
 
         Category category = new Category();
@@ -176,7 +232,7 @@ public class FragmentBalance extends Fragment implements View.OnTouchListener, V
     public void onClick(View view){
 
         switch (view.getId()){
-            case R.id.btnSubstract:
+            case R.id.btnSubtract:
                 openIncomeExpensesWindow(null, getString(R.string.expenses));
                 break;
             case R.id.btnAdd:

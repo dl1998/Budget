@@ -20,6 +20,7 @@ import com.android.budget.Converter;
 import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.android.budget.activities.IncomeExpensesActivity;
+import com.android.budget.activities.IncomeExpensesInfoActivity;
 import com.android.budget.activities.MainActivity;
 import com.android.budget.adapter.IncomesAdapter;
 import com.android.budget.adapter.model.IncomesModel;
@@ -47,6 +48,8 @@ public class FragmentIncomesList extends AbstractTabFragment {
     private CurrencyDAOImpl currencyDAO;
     private IncomeDAOImpl incomeDAO;
 
+    private IncomeExpensesInfoActivity parentActivity;
+
     public static FragmentIncomesList getInstance(Context context) {
         FragmentIncomesList fragmentIncomesList = new FragmentIncomesList();
 
@@ -65,6 +68,8 @@ public class FragmentIncomesList extends AbstractTabFragment {
         selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
 
         listView = view.findViewById(R.id.incomesList);
+
+        parentActivity = (IncomeExpensesInfoActivity) getActivity();
 
         initDAO();
 
@@ -90,7 +95,8 @@ public class FragmentIncomesList extends AbstractTabFragment {
         Integer currencyId = accountDAO.findAccountById(selectedAccountId).getId_currency();
         String currency = currencyDAO.findCurrencyById(currencyId).getIso_name_currency();
 
-        ArrayList<Income> incomes = new ArrayList<>(incomeDAO.getAllByDateForAccount(Converter.getDate(date), selectedAccountId));
+        Date dateSQL = new Date(parentActivity.selectedDate.getTime().getTime());
+        ArrayList<Income> incomes = new ArrayList<>(incomeDAO.getAllByDateForAccount(dateSQL, selectedAccountId));
 
         ArrayList<IncomesModel> incomesModels = new ArrayList<>();
 
@@ -180,5 +186,9 @@ public class FragmentIncomesList extends AbstractTabFragment {
             }
 
         });
+    }
+
+    public void refreshAdapter() {
+        loadIncomesInList();
     }
 }

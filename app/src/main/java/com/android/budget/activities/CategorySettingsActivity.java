@@ -130,6 +130,7 @@ public class CategorySettingsActivity extends AppCompatActivity {
                         category.setName_category(etCategoryName.getText().toString());
                         categoryDAO.add(category);
                     } else {
+                        category.setName_category(etCategoryName.getText().toString());
                         categoryDAO.updateById(category);
                     }
 
