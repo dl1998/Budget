@@ -1,5 +1,6 @@
 package com.android.budget.fragments;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.budget.DBHelper;
 import com.android.budget.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
@@ -28,6 +30,8 @@ import java.util.List;
 public class FragmentStatistic extends Fragment {
 
     PieChart chart;
+    private DBHelper dbHelper;
+    private SQLiteDatabase db;
 
     @Nullable
     @Override
@@ -65,6 +69,8 @@ public class FragmentStatistic extends Fragment {
     }
 
     public void addData(Float[] dataObjectsY, String[] dataObjectsX){
+
+        //TODO Add correct data from db
 
         List<PieEntry> yEntries = new ArrayList<>();
 
