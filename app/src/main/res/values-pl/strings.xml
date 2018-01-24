@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Budget</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="statistics">Statystyka</string>
+    <string name="balance">Saldo</string>
+    <string name="account">Konto</string>
+    <string name="other">Inne</string>
+    <string name="change">Zmień</string>
+    <string name="remove">Usuń</string>
+    <string name="cancel">Anuluj</string>
+    <string name="apply">Zastosuj</string>
+    <string name="currency">Waluta</string>
+    <string name="choose_currency">Wybierz Walutu</string>
+    <string name="account_incorrect_info">Nieprawidłowe dane</string>
+    <string name="date">Data</string>
+    <string name="category_setting">Ustawienie Kategorii</string>
+    <string name="account_not_selected">Konto Nie Wybrane</string>
+    <string name="income">Dochód</string>
+    <string name="expenses">Wydatki</string>
+    <string name="add">Dodaj</string>
+    <string name="select_category">Wybierz Kategorię</string>
+    <string name="add_category">Dodaj Kategorię</string>
+    <string name="category_name">Nazwa Kategorii</string>
+    <string name="cost_incorrect_info">nie może wynosić 0 lub mniej</string>
+    <string name="edit">Edytuj</string>
+</resources>
