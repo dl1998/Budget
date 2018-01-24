@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.budget.R;
+import com.android.budget.activities.MainActivity;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -27,7 +28,9 @@ import java.util.List;
 
 public class FragmentStatistic extends Fragment {
 
-    PieChart chart;
+    private PieChart chart;
+
+    private Integer selectedAccountId;
 
     @Nullable
     @Override
@@ -35,6 +38,12 @@ public class FragmentStatistic extends Fragment {
                              @Nullable Bundle savedInstanceBundle){
 
         View view = inflater.inflate(R.layout.fragment_statistic, container, false);
+
+        selectedAccountId = MainActivity.preferences.getInt("selectedAccount", -1);
+
+        View contentView = view.findViewById(R.id.statistic_parent);
+        contentView.setEnabled(false);
+        contentView.setVisibility(View.INVISIBLE);
 
         Toolbar toolbar;
         if (container != null) {
