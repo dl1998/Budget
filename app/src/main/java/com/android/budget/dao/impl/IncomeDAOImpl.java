@@ -10,27 +10,24 @@ import com.android.budget.dao.IncomeDAO;
 import com.android.budget.entity.Income;
 
 import java.sql.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by dl1998 on 29.10.17.
  */
 
-public class IncomeDAOImpl implements IncomeDAO {
+public class IncomeDAOImpl extends StandardDAOImpl<Income> implements IncomeDAO {
 
-    private SQLiteDatabase db;
-
-    private IncomeDAOImpl() {
-    }
+    private String TABLE_NAME = "income";
 
     public IncomeDAOImpl(SQLiteDatabase db) {
-        this.db = db;
+        super(db);
     }
 
-    private Income getIncome(Cursor cursor) {
-
+    @Override
+    Income getByCursor(Cursor cursor) {
         Income income = new Income();
+
         income.setId_income(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
         income.setDate_income(Converter.getDate(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1)))));
         income.setCost_income(cursor.getFloat(cursor.getColumnIndex(cursor.getColumnName(2))));
@@ -39,51 +36,16 @@ public class IncomeDAOImpl implements IncomeDAO {
         return income;
     }
 
-    private List<Income> get(String selection, String[] selectionArgs) {
+    @Override
+    SQLiteStatement bind(SQLiteStatement statement, Income income, boolean update) {
 
-        List<Income> list = new LinkedList<>();
+        statement.clearBindings();
+        statement.bindString(1, Converter.getTextDate(income.getDate_income()));
+        statement.bindDouble(2, income.getCost_income());
+        statement.bindLong(3, income.getId_account());
+        if (update) statement.bindLong(4, income.getId_income());
 
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("income", null, selection, selectionArgs, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        list.add(getIncome(cursor));
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        return list;
-    }
-
-    private void removeUpdate(String sql) {
-
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
+        return statement;
     }
 
     @Override
@@ -91,7 +53,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income findIncomeById start");
 
-        List<Income> list = get("id_income = ?", new String[]{String.valueOf(id)});
+        List<Income> list = super.get(TABLE_NAME, "id_income = ?", new String[]{String.valueOf(id)}, null);
 
         Log.d("myDB", "Income findIncomeById end");
 
@@ -103,7 +65,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income getAll start");
 
-        List<Income> list = get(null, null);
+        List<Income> list = super.get(TABLE_NAME, null, null, null);
 
         Log.d("myDB", "Income getAll end");
 
@@ -115,7 +77,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income getAllByAccount start");
 
-        List<Income> list = get("id_account = ?", new String[]{String.valueOf(accountId)});
+        List<Income> list = super.get(TABLE_NAME, "id_account = ?", new String[]{String.valueOf(accountId)}, null);
 
         Log.d("myDB", "Income getAllByAccount end");
 
@@ -127,7 +89,8 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income getAllByDateForAccount start");
 
-        List<Income> list = get("id_account = ? and date_income = ?", new String[]{String.valueOf(accountId), Converter.getTextDate(date)});
+        List<Income> list = super.get(TABLE_NAME, "id_account = ? and date_income = ?",
+            new String[]{String.valueOf(accountId), Converter.getTextDate(date)}, null);
 
         Log.d("myDB", "Income getAllByDateForAccount end");
 
@@ -139,21 +102,8 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income add start");
 
-        String sql = "INSERT INTO income (date_income, cost_income, id_account) VALUES(?, ?, ?);";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.clearBindings();
-            statement.bindString(1, Converter.getTextDate(income.getDate_income()));
-            statement.bindDouble(2, income.getCost_income());
-            statement.bindLong(3, income.getId_account());
-            statement.execute();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        String SQL = String.format("INSERT INTO %s (date_income, cost_income, id_account) VALUES(?, ?, ?);", TABLE_NAME);
+        super.add(income, SQL);
 
         Log.d("myDB", "Income add end");
 
@@ -164,7 +114,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income removeAll start");
 
-        removeUpdate("DELETE FROM income;");
+        super.remove(String.format("DELETE FROM %s;", TABLE_NAME));
 
         Log.d("myDB", "Income removeAll end");
 
@@ -175,7 +125,7 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income removeById start");
 
-        removeUpdate("DELETE FROM income WHERE id_income = " + id + ";");
+        super.remove(String.format("DELETE FROM %s WHERE id_income = %d;", TABLE_NAME, id));
 
         Log.d("myDB", "Income removeById end");
 
@@ -186,14 +136,9 @@ public class IncomeDAOImpl implements IncomeDAO {
 
         Log.d("myDB", "Income updateById start");
 
-        String date = Converter.getTextDate(income.getDate_income());
-
-        String sql = "UPDATE income SET " +
-                "date_income = \"" + date + "\", " +
-                "cost_income = " + income.getCost_income() + ", " +
-                "id_account = " + income.getId_account() + " " +
-                "WHERE id_income = " + income.getId_income() + ";";
-        removeUpdate(sql);
+        String SQL = String.format("UPDATE %s SET date_income = ?, cost_income = ?, id_account = ? " +
+            "WHERE id_income = ?;", TABLE_NAME);
+        super.update(income, SQL);
 
         Log.d("myDB", "Income updateById end");
 
