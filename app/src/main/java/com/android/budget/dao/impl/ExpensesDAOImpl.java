@@ -10,26 +10,24 @@ import com.android.budget.dao.ExpensesDAO;
 import com.android.budget.entity.Expenses;
 
 import java.sql.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by dl1998 on 29.10.17.
  */
 
-public class ExpensesDAOImpl implements ExpensesDAO {
+public class ExpensesDAOImpl extends StandardDAOImpl<Expenses> implements ExpensesDAO {
 
-    private SQLiteDatabase db;
-
-    private ExpensesDAOImpl() {
-    }
+    private String TABLE_NAME = "expenses";
 
     public ExpensesDAOImpl(SQLiteDatabase db) {
-        this.db = db;
+        super(db);
     }
 
-    private Expenses getExpenses(Cursor cursor) {
+    @Override
+    Expenses getByCursor(Cursor cursor) {
         Expenses expenses = new Expenses();
+
         expenses.setId_expenses(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
         expenses.setDate_expenses(Converter.getDate(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1)))));
         expenses.setCost_expenses(cursor.getFloat(cursor.getColumnIndex(cursor.getColumnName(2))));
@@ -38,51 +36,16 @@ public class ExpensesDAOImpl implements ExpensesDAO {
         return expenses;
     }
 
-    private List<Expenses> get(String selection, String[] selectionArgs) {
+    @Override
+    SQLiteStatement bind(SQLiteStatement statement, Expenses expenses, boolean update) {
 
-        List<Expenses> list = new LinkedList<>();
+        statement.clearBindings();
+        statement.bindString(1, Converter.getTextDate(expenses.getDate_expenses()));
+        statement.bindDouble(2, expenses.getCost_expenses());
+        statement.bindLong(3, expenses.getId_category());
+        if (update) statement.bindLong(4, expenses.getId_expenses());
 
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("expenses", null, selection, selectionArgs, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        list.add(getExpenses(cursor));
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        return list;
-    }
-
-    private void removeUpdate(String sql) {
-
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
+        return statement;
     }
 
     @Override
@@ -90,7 +53,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses findExpensesById start");
 
-        List<Expenses> list = get("id_expenses = ?", new String[]{String.valueOf(id)});
+        List<Expenses> list = super.get(TABLE_NAME, "id_expenses = ?", new String[]{String.valueOf(id)}, null);
 
         Log.d("myDB", "Expenses findExpensesById end");
 
@@ -101,7 +64,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
     public List<Expenses> getAll() {
         Log.d("myDB", "Expenses getAll start");
 
-        List<Expenses> list = get(null, null);
+        List<Expenses> list = super.get(TABLE_NAME, null, null, null);
 
         Log.d("myDB", "Expenses getAll end");
 
@@ -113,7 +76,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses getAllByCategory start");
 
-        List<Expenses> list = get("id_category = ?", new String[]{String.valueOf(categoryId)});
+        List<Expenses> list = super.get(TABLE_NAME, "id_category = ?", new String[]{String.valueOf(categoryId)}, null);
 
         Log.d("myDB", "Expenses getAllByCategory end");
 
@@ -125,7 +88,8 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses getAllByDateForCategory start");
 
-        List<Expenses> list = get("id_category = ? and date_expenses = ?", new String[]{String.valueOf(categoryId), Converter.getTextDate(date)});
+        List<Expenses> list = super.get(TABLE_NAME, "id_category = ? and date_expenses = ?",
+            new String[]{String.valueOf(categoryId), Converter.getTextDate(date)}, null);
 
         Log.d("myDB", "Expenses getAllByDateForCategory end");
 
@@ -137,21 +101,8 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses add start");
 
-        String sql = "INSERT INTO expenses (date_expenses, cost_expenses, id_category) VALUES(?, ?, ?);";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.clearBindings();
-            statement.bindString(1, Converter.getTextDate(expenses.getDate_expenses()));
-            statement.bindDouble(2, expenses.getCost_expenses());
-            statement.bindLong(3, expenses.getId_category());
-            statement.execute();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        String SQL = String.format("INSERT INTO %s (date_expenses, cost_expenses, id_category) VALUES(?, ?, ?);", TABLE_NAME);
+        super.add(expenses, SQL);
 
         Log.d("myDB", "Expenses add end");
 
@@ -162,7 +113,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses removeAll start");
 
-        removeUpdate("DELETE FROM expenses;");
+        super.remove(String.format("DELETE FROM %s;", TABLE_NAME));
 
         Log.d("myDB", "Expenses removeAll end");
 
@@ -173,7 +124,7 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses removeById start");
 
-        removeUpdate("DELETE FROM expenses WHERE id_expenses = " + id + ";");
+        super.remove(String.format("DELETE FROM %s WHERE id_expenses = %d;", TABLE_NAME, id));
 
         Log.d("myDB", "Expenses removeById end");
 
@@ -184,14 +135,9 @@ public class ExpensesDAOImpl implements ExpensesDAO {
 
         Log.d("myDB", "Expenses updateById start");
 
-        String date = Converter.getTextDate(expenses.getDate_expenses());
-
-        String sql = "UPDATE expenses SET " +
-                "date_expenses = \"" + date + "\", " +
-                "cost_expenses = " + expenses.getCost_expenses() + ", " +
-                "id_category = " + expenses.getId_category() + " " +
-                "WHERE id_expenses = " + expenses.getId_expenses() + ";";
-        removeUpdate(sql);
+        String SQL = String.format("UPDATE %s SET date_expenses = ?, cost_expenses = ?, id_category = ? " +
+            "WHERE id_expenses = ?;", TABLE_NAME);
+        super.update(expenses, SQL);
 
         Log.d("myDB", "Expenses updateById end");
 

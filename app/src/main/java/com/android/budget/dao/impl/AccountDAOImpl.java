@@ -8,26 +8,24 @@ import android.util.Log;
 import com.android.budget.dao.AccountDAO;
 import com.android.budget.entity.Account;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by dimal on 09.10.2017.
  */
 
-public class AccountDAOImpl implements AccountDAO {
+public class AccountDAOImpl extends StandardDAOImpl<Account> implements AccountDAO {
 
-    private SQLiteDatabase db;
-
-    private AccountDAOImpl(){}
+    private String TABLE_NAME = "account";
 
     public AccountDAOImpl(SQLiteDatabase db) {
-        this.db = db;
+        super(db);
     }
 
-    private Account getAccount(Cursor cursor) {
-
+    @Override
+    Account getByCursor(Cursor cursor) {
         Account account = new Account();
+
         account.setId_account(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(0))));
         account.setName_account(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
         account.setId_currency(cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(2))));
@@ -36,51 +34,16 @@ public class AccountDAOImpl implements AccountDAO {
         return account;
     }
 
-    private List<Account> get(String selection, String[] selectionArgs) {
+    @Override
+    SQLiteStatement bind(SQLiteStatement statement, Account account, boolean update) {
 
-        List<Account> list = new LinkedList<>();
+        statement.clearBindings();
+        statement.bindString(1, account.getName_account());
+        statement.bindLong(2, account.getId_currency());
+        statement.bindDouble(3, account.getBalance());
+        if (update) statement.bindLong(4, account.getId_account());
 
-        Cursor cursor;
-
-        db.beginTransaction();
-        try {
-
-            cursor = db.query("account", null, selection, selectionArgs, null, null, null);
-
-            if (cursor != null) {
-                if (cursor.moveToFirst()) {
-                    do {
-                        Account account = getAccount(cursor);
-
-                        list.add(account);
-                    } while (cursor.moveToNext());
-                }
-            }
-
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        return list;
-    }
-
-    private void removeUpdate(String sql) {
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.executeUpdateDelete();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        return statement;
     }
 
     @Override
@@ -88,7 +51,7 @@ public class AccountDAOImpl implements AccountDAO {
 
         Log.d("myDB", "Account findAccountById start");
 
-        List<Account> list = get("id_account = ?", new String[]{String.valueOf(id)});
+        List<Account> list = super.get(TABLE_NAME, "id_account = ?", new String[]{String.valueOf(id)}, null);
 
         Log.d("myDB", "Account findAccountById end");
 
@@ -100,7 +63,7 @@ public class AccountDAOImpl implements AccountDAO {
 
         Log.d("myDB", "Account getAll start");
 
-        List<Account> list = get(null, null);
+        List<Account> list = super.get(TABLE_NAME, null, null, null);
 
         Log.d("myDB", "Account getAll end");
 
@@ -112,21 +75,8 @@ public class AccountDAOImpl implements AccountDAO {
 
         Log.d("myDB", "Account add start");
 
-        String sql = "INSERT INTO account (name_account, id_currency, balance) VALUES(?, ?, ?);";
-        SQLiteStatement statement = db.compileStatement(sql);
-        db.beginTransaction();
-        try {
-
-            statement.clearBindings();
-            statement.bindString(1, account.getName_account());
-            statement.bindLong(2, account.getId_currency());
-            statement.bindDouble(3, account.getBalance());
-            statement.execute();
-            db.setTransactionSuccessful();
-
-        } finally {
-            db.endTransaction();
-        }
+        String SQL = String.format("INSERT INTO %s (name_account, id_currency, balance) VALUES(?, ?, ?);", TABLE_NAME);
+        super.add(account, SQL);
 
         Log.d("myDB", "Account add end");
 
@@ -137,7 +87,7 @@ public class AccountDAOImpl implements AccountDAO {
 
         Log.d("myDB", "Account removeAll start");
 
-        removeUpdate("DELETE FROM account;");
+        super.remove(String.format("DELETE FROM %s;", TABLE_NAME));
 
         Log.d("myDB", "Account removeAll end");
 
@@ -148,7 +98,7 @@ public class AccountDAOImpl implements AccountDAO {
 
         Log.d("myDB", "Account removeById start");
 
-        removeUpdate("DELETE FROM account WHERE id_account = " + id + ";");
+        super.remove(String.format("DELETE FROM %s WHERE id_account = %d;", TABLE_NAME, id));
 
         Log.d("myDB", "Account removeById end");
 
@@ -159,10 +109,9 @@ public class AccountDAOImpl implements AccountDAO {
 
         Log.d("myDB", "Account updateById start");
 
-        String sql = "UPDATE account SET name_account = \"" + account.getName_account() + "\", " +
-                "id_currency = " + account.getId_currency() + ", " +
-                "balance = " + account.getBalance() + " WHERE id_account = " + account.getId_account() + ";";
-        removeUpdate(sql);
+        String SQL = String.format("UPDATE %s SET name_account = ?, id_currency = ?, balance = ? " +
+            "WHERE id_account = ?;", TABLE_NAME);
+        super.update(account, SQL);
 
         Log.d("myDB", "Account updateById end");
 
